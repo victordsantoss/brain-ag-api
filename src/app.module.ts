@@ -10,4 +10,4 @@ import { ConfigModule } from '@nestjs/config';
     DatabaseModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

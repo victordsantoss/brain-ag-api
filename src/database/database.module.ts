@@ -38,4 +38,4 @@ import { createDataSource } from './data-source';
   ],
   exports: [TypeOrmModule, DataSource],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

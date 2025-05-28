@@ -1,0 +1,8 @@
+export enum HarvestSeason {
+  VERAO = 'VERÃO',
+  INVERNO = 'INVERNO',
+  PRIMAVERA = 'PRIMAVERA',
+  OUTONO = 'OUTONO',
+  PRIMEIRA_SAFRA = 'PRIMEIRA SAFRA',
+  SEGUNDA_SAFRA = 'SEGUNDA SAFRA',
+} 
