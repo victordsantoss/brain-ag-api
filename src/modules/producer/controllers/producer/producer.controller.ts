@@ -6,8 +6,10 @@ import {
   Post,
   Query,
   UseGuards,
+  Param,
+  Patch,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 import { IRegisterProducerRequestDto } from '../../dtos/producer/register.request.dto';
 import { IRegisterProducerService } from '../../services/producer/register/register.interface';
 import { Producer } from '../../../../database/entities/producer.entity';
@@ -15,7 +17,11 @@ import { CpfGuard } from '../../../../common/guards/cpf.guard';
 import { BasePaginationResponseDto } from '../../../../common/dtos/base-pagination.response.dto';
 import { IListProducersRequestDto } from '../../dtos/producer/list.request.dto';
 import { IListProducersService } from '../../services/producer/list/list.interface';
+import { IUpdateProducerService } from '../../services/producer/update/update.interface';
+import { IUpdateProducerRequestDto } from '../../dtos/producer/update.request.dto';
+import { UpdateResult } from 'typeorm';
 
+@ApiTags('Produtores')
 @Controller('producer')
 export class ProducerController {
   constructor(
@@ -24,6 +30,9 @@ export class ProducerController {
 
     @Inject('IListProducersService')
     private readonly listProducersService: IListProducersService,
+
+    @Inject('IUpdateProducerService')
+    private readonly updateProducerService: IUpdateProducerService,
   ) {}
 
   @Post()
@@ -57,5 +66,23 @@ export class ProducerController {
     @Query() query: IListProducersRequestDto,
   ): Promise<BasePaginationResponseDto<Producer>> {
     return await this.listProducersService.perform(query);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Atualiza um produtor existente' })
+  @ApiResponse({
+    status: 200,
+    description: 'Produtor atualizado com sucesso',
+    type: UpdateResult,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Produtor não encontrado',
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() data: IUpdateProducerRequestDto,
+  ): Promise<UpdateResult> {
+    return this.updateProducerService.perform(id, data);
   }
 }
