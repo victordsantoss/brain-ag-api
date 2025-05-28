@@ -8,6 +8,7 @@ import {
   UseGuards,
   Param,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 import { IRegisterProducerRequestDto } from '../../dtos/producer/register.request.dto';
@@ -20,6 +21,7 @@ import { IListProducersService } from '../../services/producer/list/list.interfa
 import { IUpdateProducerService } from '../../services/producer/update/update.interface';
 import { IUpdateProducerRequestDto } from '../../dtos/producer/update.request.dto';
 import { UpdateResult } from 'typeorm';
+import { IDeleteProducerService } from '../../services/producer/delete/delete.interface';
 
 @ApiTags('Produtores')
 @Controller('producer')
@@ -33,6 +35,9 @@ export class ProducerController {
 
     @Inject('IUpdateProducerService')
     private readonly updateProducerService: IUpdateProducerService,
+
+    @Inject('IDeleteProducerService')
+    private readonly deleteProducerService: IDeleteProducerService,
   ) {}
 
   @Post()
@@ -84,5 +89,16 @@ export class ProducerController {
     @Body() data: IUpdateProducerRequestDto,
   ): Promise<UpdateResult> {
     return this.updateProducerService.perform(id, data);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Deletar um produtor logicamente' })
+  @ApiResponse({
+    status: 200,
+    description: 'Produtor deletado com sucesso',
+    type: UpdateResult,
+  })
+  async delete(@Param('id') id: string): Promise<UpdateResult> {
+    return this.deleteProducerService.perform(id);
   }
 }

@@ -3,7 +3,6 @@ import { IRegisterProducerRequestDto } from '../../dtos/producer/register.reques
 import { IBaseRepository } from '../../../../common/repositories/base.repository.interface';
 import { IListProducersRequestDto } from '../../dtos/producer/list.request.dto';
 import { IUpdateProducerRequestDto } from '../../dtos/producer/update.request.dto';
-import { UpdateResult } from 'typeorm';
 
 export interface IProducerRepository
   extends IBaseRepository<
@@ -14,6 +13,4 @@ export interface IProducerRepository
   findByFilters(
     filters: IListProducersRequestDto,
   ): Promise<[Producer[], number]>;
-
-  update(id: string, data: IUpdateProducerRequestDto): Promise<UpdateResult>;
 }

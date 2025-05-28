@@ -8,6 +8,7 @@ import {
   BadRequestException,
   CanActivate,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CpfGuard } from '../../../../common/guards/cpf.guard';
 import { IListProducersService } from '../../services/producer/list/list.interface';
@@ -27,6 +28,10 @@ describe('ProducerController', () => {
   };
 
   const mockUpdateProducerService = {
+    perform: jest.fn(),
+  };
+
+  const mockDeleteProducerService = {
     perform: jest.fn(),
   };
 
@@ -64,6 +69,10 @@ describe('ProducerController', () => {
         {
           provide: 'IUpdateProducerService',
           useValue: mockUpdateProducerService,
+        },
+        {
+          provide: 'IDeleteProducerService',
+          useValue: mockDeleteProducerService,
         },
       ],
     })
@@ -283,6 +292,80 @@ describe('ProducerController', () => {
 
       expect(result).toEqual(expectedResponse);
       expect(listProducersService.perform).toHaveBeenCalledWith(query);
+    });
+  });
+
+  describe('update', () => {
+    it('should successfully update a producer', async () => {
+      const producerId = faker.string.uuid();
+      const producerData = {
+        name: faker.person.fullName(),
+      };
+
+      const mockUpdatedProducer = createMockProducer();
+      Object.assign(mockUpdatedProducer, producerData);
+
+      mockUpdateProducerService.perform.mockResolvedValue(mockUpdatedProducer);
+
+      const result = await controller.update(producerId, producerData);
+
+      expect(result).toEqual(mockUpdatedProducer);
+      expect(mockUpdateProducerService.perform).toHaveBeenCalledWith(
+        producerId,
+        producerData,
+      );
+    });
+
+    it('should throw NotFoundException when producer is not found', async () => {
+      const producerId = faker.string.uuid();
+      const producerData = {
+        name: faker.person.fullName(),
+      };
+
+      mockUpdateProducerService.perform.mockRejectedValue(
+        new NotFoundException('Produtor não encontrado'),
+      );
+
+      await expect(controller.update(producerId, producerData)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(mockUpdateProducerService.perform).toHaveBeenCalledWith(
+        producerId,
+        producerData,
+      );
+    });
+  });
+
+  describe('delete', () => {
+    it('should successfully delete a producer', async () => {
+      const producerId = faker.string.uuid();
+      const mockDeletedProducer = createMockProducer();
+
+      mockDeleteProducerService.perform.mockResolvedValue(mockDeletedProducer);
+
+      const result = await controller.delete(producerId);
+
+      expect(result).toEqual(mockDeletedProducer);
+      expect(mockDeleteProducerService.perform).toHaveBeenCalledWith(
+        producerId,
+      );
+    });
+
+    it('should throw NotFoundException when producer is not found', async () => {
+      const producerId = faker.string.uuid();
+
+      mockDeleteProducerService.perform.mockRejectedValue(
+        new NotFoundException('Produtor não encontrado'),
+      );
+
+      await expect(controller.delete(producerId)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(mockDeleteProducerService.perform).toHaveBeenCalledWith(
+        producerId,
+      );
     });
   });
 });

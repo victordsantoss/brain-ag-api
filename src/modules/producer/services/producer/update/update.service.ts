@@ -4,6 +4,7 @@ import {
   BadRequestException,
   Logger,
   Inject,
+  InternalServerErrorException,
 } from '@nestjs/common';
 
 import { IProducerRepository } from '../../../repositories/producer/producer.interface';
@@ -27,10 +28,16 @@ export class UpdateProducerService implements IUpdateProducerService {
     id: string,
     data: IUpdateProducerRequestDto,
   ): Promise<UpdateResult> {
-    this.logger.log('Iniciando método perform');
-    const producer = await this.findProducerById(id);
-    await this.validateUniqueFields(producer, data);
-    return await this.updateProducer(id, data);
+    try {
+      this.logger.log('Iniciando método perform');
+      const producer = await this.findProducerById(id);
+      await this.validateUniqueFields(producer, data);
+      return await this.updateProducer(id, data);
+    } catch (error) {
+      throw (
+        error ?? new InternalServerErrorException(`Erro ao atualizar produtor`)
+      );
+    }
   }
 
   private async findProducerById(id: string): Promise<Producer> {

@@ -45,8 +45,8 @@ export abstract class BaseRepository<
   }
 
   // Deleção lógica
-  public async softDelete(id: string): Promise<void> {
-    await this.repository.softDelete(id);
+  public async softDelete(id: string): Promise<UpdateResult> {
+    return this.repository.softDelete(id);
   }
 
   public async findOneBy<K extends keyof Entity>(

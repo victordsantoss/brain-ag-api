@@ -1,6 +1,7 @@
 import { RegisterProducerService } from '../services/producer/register/register.service';
 import { ListProducersService } from '../services/producer/list/list.service';
 import { UpdateProducerService } from '../services/producer/update/update.service';
+import { DeleteProducerService } from '../services/producer/delete/delete.service';
 import { ProducerRepository } from '../repositories/producer/producer.repository';
 
 export const producerProviders = [
@@ -15,6 +16,10 @@ export const producerProviders = [
   {
     provide: 'IUpdateProducerService',
     useClass: UpdateProducerService,
+  },
+  {
+    provide: 'IDeleteProducerService',
+    useClass: DeleteProducerService,
   },
   {
     provide: 'IProducerRepository',
