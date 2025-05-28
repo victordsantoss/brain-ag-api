@@ -3,14 +3,17 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { IRegisterProducerService } from './register.interface';
-import { IProducerRepository } from 'src/modules/producer/repositories/producer/producer.interface';
-import { IRegisterProducerRequestDto } from 'src/modules/producer/dtos/producer/register.request.dto';
-import { Producer } from 'src/database/entities/producer.entity';
+import { IProducerRepository } from '../../../repositories/producer/producer.interface';
+import { IRegisterProducerRequestDto } from '../../../dtos/producer/register.request.dto';
+import { Producer } from '../../../../../database/entities/producer.entity';
 
 @Injectable()
 export class RegisterProducerService implements IRegisterProducerService {
+  private readonly logger = new Logger(RegisterProducerService.name);
+
   private readonly _emailField: keyof Producer = 'email';
   private readonly _cpfField: keyof Producer = 'cpf';
 
@@ -20,6 +23,7 @@ export class RegisterProducerService implements IRegisterProducerService {
   ) {}
 
   async perform(producer: IRegisterProducerRequestDto): Promise<Producer> {
+    this.logger.log('Iniciando método perform');
     try {
       await this.findProducerByEmail(producer.email);
       await this.findProducerByCpf(producer.cpf);
@@ -33,6 +37,7 @@ export class RegisterProducerService implements IRegisterProducerService {
   }
 
   private async findProducerByEmail(email: string) {
+    this.logger.log('Iniciando método findProducerByEmail');
     const existingProducerByEmail = await this.producerRepository.findOneBy(
       this.emailField,
       email,
@@ -44,6 +49,7 @@ export class RegisterProducerService implements IRegisterProducerService {
   }
 
   private async findProducerByCpf(cpf: string) {
+    this.logger.log('Iniciando método findProducerByCpf');
     const existingProducerByCpf = await this.producerRepository.findOneBy(
       this.cpfField,
       cpf,

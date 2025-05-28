@@ -1,6 +1,11 @@
 import { Producer } from '../../../../database/entities/producer.entity';
 import { IRegisterProducerRequestDto } from '../../dtos/producer/register.request.dto';
-import { IBaseRepository } from 'src/common/repositories/base.repository.interface';
+import { IBaseRepository } from '../../../../common/repositories/base.repository.interface';
+import { IListProducersRequestDto } from '../../dtos/producer/list.request.dto';
 
 export interface IProducerRepository
-  extends IBaseRepository<Producer, IRegisterProducerRequestDto> {}
+  extends IBaseRepository<Producer, IRegisterProducerRequestDto> {
+  findByFilters(
+    filters: IListProducersRequestDto,
+  ): Promise<[Producer[], number]>;
+}

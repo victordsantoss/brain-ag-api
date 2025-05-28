@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Farm } from './farm.entity';
-import { BaseEntityStatus } from 'src/common/enums/status.enum';
+import { BaseEntityStatus } from '../../common/enums/status.enum';
 
 @Entity({ name: 'tb_producer' })
 export class Producer {

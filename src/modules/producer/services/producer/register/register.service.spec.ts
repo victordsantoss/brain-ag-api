@@ -3,8 +3,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { TestingModule, Test } from '@nestjs/testing';
-import { Producer } from 'src/database/entities/producer.entity';
-import { IProducerRepository } from 'src/modules/producer/repositories/producer/producer.interface';
+import { Producer } from '../../../../../database/entities/producer.entity';
+import { IProducerRepository } from '../../../repositories/producer/producer.interface';
 import { RegisterProducerService } from './register.service';
 import { faker } from '@faker-js/faker';
 import { BaseEntityStatus } from '../../../../../common/enums/status.enum';

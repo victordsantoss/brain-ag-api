@@ -10,12 +10,19 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { CpfGuard } from '../../../../common/guards/cpf.guard';
+import { IListProducersService } from '../../services/producer/list/list.interface';
+import { BasePaginationResponseDto } from '../../../../common/dtos/base-pagination.response.dto';
 
 describe('ProducerController', () => {
   let controller: ProducerController;
   let registerProducerService: jest.Mocked<IRegisterProducerService>;
+  let listProducersService: jest.Mocked<IListProducersService>;
 
   const mockRegisterProducerService = {
+    perform: jest.fn(),
+  };
+
+  const mockListProducersService = {
     perform: jest.fn(),
   };
 
@@ -46,6 +53,10 @@ describe('ProducerController', () => {
           provide: 'IRegisterProducerService',
           useValue: mockRegisterProducerService,
         },
+        {
+          provide: 'IListProducersService',
+          useValue: mockListProducersService,
+        },
       ],
     })
       .overrideGuard(CpfGuard)
@@ -54,6 +65,7 @@ describe('ProducerController', () => {
 
     controller = module.get<ProducerController>(ProducerController);
     registerProducerService = module.get('IRegisterProducerService');
+    listProducersService = module.get('IListProducersService');
   });
 
   afterEach(() => {
@@ -143,6 +155,126 @@ describe('ProducerController', () => {
       expect(registerProducerService.perform).toHaveBeenCalledWith(
         producerData,
       );
+    });
+  });
+
+  describe('list', () => {
+    it('should return paginated producers without search', async () => {
+      const query = {
+        page: 1,
+        limit: 10,
+        orderBy: 'name',
+        sortBy: 'ASC' as const,
+      };
+
+      const mockProducers = Array(3)
+        .fill(null)
+        .map(() => createMockProducer());
+
+      const expectedResponse: BasePaginationResponseDto<Producer> = {
+        data: mockProducers,
+        meta: {
+          page: 1,
+          limit: 10,
+          total: 3,
+          totalPages: 1,
+        },
+      };
+
+      listProducersService.perform.mockResolvedValue(expectedResponse);
+
+      const result = await controller.list(query);
+
+      expect(result).toEqual(expectedResponse);
+      expect(listProducersService.perform).toHaveBeenCalledWith(query);
+    });
+
+    it('should return paginated producers with search', async () => {
+      const query = {
+        page: 1,
+        limit: 10,
+        orderBy: 'name',
+        sortBy: 'ASC' as const,
+        search: 'test',
+      };
+
+      const mockProducers = Array(2)
+        .fill(null)
+        .map(() => createMockProducer());
+
+      const expectedResponse: BasePaginationResponseDto<Producer> = {
+        data: mockProducers,
+        meta: {
+          page: 1,
+          limit: 10,
+          total: 2,
+          totalPages: 1,
+        },
+      };
+
+      listProducersService.perform.mockResolvedValue(expectedResponse);
+
+      const result = await controller.list(query);
+
+      expect(result).toEqual(expectedResponse);
+      expect(listProducersService.perform).toHaveBeenCalledWith(query);
+    });
+
+    it('should handle empty results', async () => {
+      const query = {
+        page: 1,
+        limit: 10,
+        orderBy: 'name',
+        sortBy: 'ASC' as const,
+        search: 'nonexistent',
+      };
+
+      const expectedResponse: BasePaginationResponseDto<Producer> = {
+        data: [],
+        meta: {
+          page: 1,
+          limit: 10,
+          total: 0,
+          totalPages: 0,
+        },
+      };
+
+      listProducersService.perform.mockResolvedValue(expectedResponse);
+
+      const result = await controller.list(query);
+
+      expect(result).toEqual(expectedResponse);
+      expect(listProducersService.perform).toHaveBeenCalledWith(query);
+    });
+
+    it('should handle multiple pages', async () => {
+      const query = {
+        page: 2,
+        limit: 5,
+        orderBy: 'name',
+        sortBy: 'ASC' as const,
+      };
+
+      const mockProducers = Array(5)
+        .fill(null)
+        .map(() => createMockProducer());
+
+      const expectedResponse: BasePaginationResponseDto<Producer> = {
+        data: mockProducers,
+        meta: {
+          page: 2,
+          limit: 5,
+          total: 12,
+          totalPages: 3,
+        },
+      };
+
+      listProducersService.perform.mockResolvedValue(expectedResponse);
+
+      const result = await controller.list(query);
+
+      expect(result).toEqual(expectedResponse);
+      expect(listProducersService.perform).toHaveBeenCalledWith(query);
     });
   });
 });

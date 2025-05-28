@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Farm } from './farm.entity';
 import { Crop } from './crop.entity';
-import { HarvestSeason } from 'src/common/enums/harvest-season.enum';
+import { HarvestSeason } from '../../common/enums/harvest-season.enum';
 
 @Entity({ name: 'tb_harvest' })
 export class Harvest {
