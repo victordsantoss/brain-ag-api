@@ -34,6 +34,7 @@ export class UpdateProducerService implements IUpdateProducerService {
   }
 
   private async findProducerById(id: string): Promise<Producer> {
+    this.logger.log('Iniciando método findProducerById');
     const producer = await this.producerRepository.findById(id);
     if (!producer) {
       throw new NotFoundException('Produtor não encontrado');
@@ -45,6 +46,7 @@ export class UpdateProducerService implements IUpdateProducerService {
     producer: Producer,
     data: IUpdateProducerRequestDto,
   ): Promise<void> {
+    this.logger.log('Iniciando método validateUniqueFields');
     if (data.email && data.email !== producer.email) {
       await this.validateEmail(data.email);
     }
@@ -55,6 +57,7 @@ export class UpdateProducerService implements IUpdateProducerService {
   }
 
   private async validateCpf(cpf: string): Promise<void> {
+    this.logger.log('Iniciando método validateCpf');
     const existingProducer = await this.producerRepository.findOneBy(
       this.cpfField,
       cpf,
@@ -79,6 +82,7 @@ export class UpdateProducerService implements IUpdateProducerService {
     id: string,
     data: IUpdateProducerRequestDto,
   ): Promise<UpdateResult> {
+    this.logger.log('Iniciando método updateProducer');
     return await this.producerRepository.update(id, data);
   }
 

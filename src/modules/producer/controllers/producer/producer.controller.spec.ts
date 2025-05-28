@@ -26,6 +26,10 @@ describe('ProducerController', () => {
     perform: jest.fn(),
   };
 
+  const mockUpdateProducerService = {
+    perform: jest.fn(),
+  };
+
   const createMockProducer = (): Producer =>
     ({
       id: faker.string.uuid(),
@@ -56,6 +60,10 @@ describe('ProducerController', () => {
         {
           provide: 'IListProducersService',
           useValue: mockListProducersService,
+        },
+        {
+          provide: 'IUpdateProducerService',
+          useValue: mockUpdateProducerService,
         },
       ],
     })
