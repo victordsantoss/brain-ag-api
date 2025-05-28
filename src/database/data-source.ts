@@ -24,4 +24,4 @@ export const createDataSource = () => {
   });
 };
 
-export const AgrodogForFeature: EntityClassOrSchema[] = entities;
+export const BrainAgricultureForFeature: EntityClassOrSchema[] = entities;

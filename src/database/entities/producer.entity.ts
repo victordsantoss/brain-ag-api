@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Farm } from './farm.entity';
+import { BaseEntityStatus } from 'src/common/enums/status.enum';
 
 @Entity({ name: 'tb_producer' })
 export class Producer {
@@ -37,6 +38,13 @@ export class Producer {
     comment: 'Email do produtor',
   })
   email: string;
+
+  @Column({
+    name: 'status',
+    type: 'varchar',
+    default: BaseEntityStatus.ACTIVE,
+  })
+  status: BaseEntityStatus;
 
   @Column({
     name: 'phone',
