@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  DeleteDateColumn,
+} from 'typeorm';
 import { Farm } from './farm.entity';
 import { BaseEntityStatus } from '../../common/enums/status.enum';
 
@@ -73,6 +79,14 @@ export class Producer {
     comment: 'Data e hora da última atualização do registro',
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamp',
+    nullable: true,
+    comment: 'Data e hora da exclusão lógica do registro',
+  })
+  deletedAt: Date;
 
   /**
    * RELACIONAMENTOS

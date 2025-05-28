@@ -38,8 +38,15 @@ export abstract class BaseRepository<
   public async update(id: string, data: any): Promise<UpdateResult> {
     return this.repository.update(id, data);
   }
+
+  // Deleção física
   public async delete(id: string): Promise<void> {
     await this.repository.delete(id);
+  }
+
+  // Deleção lógica
+  public async softDelete(id: string): Promise<void> {
+    await this.repository.softDelete(id);
   }
 
   public async findOneBy<K extends keyof Entity>(

@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToMany,
   JoinColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { Producer } from './producer.entity';
 import { Harvest } from './harvest.entity';
@@ -81,6 +82,14 @@ export class Farm {
     comment: 'Data e hora da última atualização do registro',
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamp',
+    nullable: true,
+    comment: 'Data e hora da exclusão lógica do registro',
+  })
+  deletedAt: Date;
 
   /**
    * RELACIONAMENTOS

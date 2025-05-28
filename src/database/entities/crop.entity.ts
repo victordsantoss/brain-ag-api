@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  DeleteDateColumn,
+} from 'typeorm';
 import { Harvest } from './harvest.entity';
 
 @Entity({ name: 'tb_crop' })
@@ -44,6 +50,14 @@ export class Crop {
     comment: 'Data e hora da última atualização do registro',
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamp',
+    nullable: true,
+    comment: 'Data e hora da exclusão lógica do registro',
+  })
+  deletedAt: Date;
 
   /**
    * RELACIONAMENTOS
