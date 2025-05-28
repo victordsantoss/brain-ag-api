@@ -30,7 +30,8 @@ export class Harvest {
     type: 'enum',
     enum: HarvestSeason,
     nullable: false,
-    comment: 'Estação da safra (VERÃO, INVERNO, PRIMAVERA, OUTONO, PRIMEIRA SAFRA, SEGUNDA SAFRA)',
+    comment:
+      'Estação da safra (VERÃO, INVERNO, PRIMAVERA, OUTONO, PRIMEIRA SAFRA, SEGUNDA SAFRA)',
   })
   season: HarvestSeason;
 

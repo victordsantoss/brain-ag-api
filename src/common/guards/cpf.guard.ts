@@ -8,7 +8,7 @@ import { CpfValidator } from '../utils/validators/cpf.validators';
 
 @Injectable()
 export class CpfGuard implements CanActivate {
-  constructor(private readonly cpfValidator: CpfValidator) { }
+  constructor(private readonly cpfValidator: CpfValidator) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

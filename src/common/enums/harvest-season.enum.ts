@@ -5,4 +5,4 @@ export enum HarvestSeason {
   OUTONO = 'OUTONO',
   PRIMEIRA_SAFRA = 'PRIMEIRA SAFRA',
   SEGUNDA_SAFRA = 'SEGUNDA SAFRA',
-} 
+}

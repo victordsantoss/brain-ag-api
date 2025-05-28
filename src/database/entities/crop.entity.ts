@@ -1,7 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Harvest } from './harvest.entity';
 
-
 @Entity({ name: 'tb_crop' })
 export class Crop {
   @PrimaryGeneratedColumn('uuid', {

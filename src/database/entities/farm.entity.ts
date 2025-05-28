@@ -9,7 +9,6 @@ import {
 import { Producer } from './producer.entity';
 import { Harvest } from './harvest.entity';
 
-
 @Entity({ name: 'tb_farm' })
 export class Farm {
   @PrimaryGeneratedColumn('uuid', {
