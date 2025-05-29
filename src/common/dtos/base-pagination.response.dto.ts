@@ -36,6 +36,11 @@ export class BasePaginationResponseDto<T> {
   @ApiProperty({
     description: 'Lista de itens da página atual',
     isArray: true,
+    type: 'array',
+    items: {
+      type: 'object',
+      additionalProperties: true,
+    },
   })
   @IsArray()
   @ValidateNested({ each: true })

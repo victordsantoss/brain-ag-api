@@ -3,6 +3,7 @@ import { BasePaginationResponseDto } from '../../../../../common/dtos/base-pagin
 import { Producer } from '../../../../../database/entities/producer.entity';
 import { IListProducersRequestDto } from '../../../dtos/producer/list.request.dto';
 import { IProducerRepository } from '../../../repositories/producer/producer.interface';
+import { IProducersResponseDto } from '../../../dtos/producer/list.response.dto';
 
 @Injectable()
 export class ListProducersService {
@@ -15,7 +16,7 @@ export class ListProducersService {
 
   async perform(
     query: IListProducersRequestDto,
-  ): Promise<BasePaginationResponseDto<Producer>> {
+  ): Promise<BasePaginationResponseDto<IProducersResponseDto>> {
     this.logger.log('Iniciando método perform');
     const {
       page = 1,
@@ -34,13 +35,25 @@ export class ListProducersService {
     });
 
     return {
-      data: producers,
+      data: producers.map(this.mapToResponse),
       meta: {
         page,
         limit,
         total,
         totalPages: Math.ceil(total / limit),
       },
+    };
+  }
+
+  private mapToResponse(producer: Producer): IProducersResponseDto {
+    return {
+      id: producer.id,
+      name: producer.name,
+      email: producer.email,
+      cpf: producer.cpf,
+      phone: producer.phone,
+      status: producer.status,
+      createdAt: producer.createdAt,
     };
   }
 }

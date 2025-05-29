@@ -19,7 +19,6 @@ export class FarmController {
   @ApiResponse({
     status: 201,
     description: 'Fazenda criada com sucesso',
-    type: Farm,
   })
   @ApiResponse({
     status: 404,

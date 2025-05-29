@@ -90,14 +90,14 @@ export class Harvest {
 
   @ManyToOne(() => Farm, (farm) => farm.harvests, { onDelete: 'CASCADE' })
   @JoinColumn({
-    name: 'farm_id',
+    name: 'id_far',
     referencedColumnName: 'id',
   })
   farm: Farm;
 
   @ManyToOne(() => Crop, (crop) => crop.harvests, { onDelete: 'CASCADE' })
   @JoinColumn({
-    name: 'crop_id',
+    name: 'id_crop',
     referencedColumnName: 'id',
   })
   crop: Crop;

@@ -22,6 +22,10 @@ import { IUpdateProducerService } from '../../services/producer/update/update.in
 import { IUpdateProducerRequestDto } from '../../dtos/producer/update.request.dto';
 import { UpdateResult } from 'typeorm';
 import { IDeleteProducerService } from '../../services/producer/delete/delete.interface';
+import {
+  IProducersResponseDto,
+  IListProducersResponseDto,
+} from '../../dtos/producer/list.response.dto';
 
 @ApiTags('Produtor e Propriedade Rural')
 @Controller('producer')
@@ -45,7 +49,6 @@ export class ProducerController {
   @ApiResponse({
     status: 201,
     description: 'Produtor registrado com sucesso.',
-    type: Producer,
   })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
   @ApiBody({
@@ -66,10 +69,11 @@ export class ProducerController {
   @ApiResponse({
     status: 200,
     description: 'Lista de produtores retornada com sucesso.',
+    type: IListProducersResponseDto,
   })
   async list(
     @Query() query: IListProducersRequestDto,
-  ): Promise<BasePaginationResponseDto<Producer>> {
+  ): Promise<BasePaginationResponseDto<IProducersResponseDto>> {
     return await this.listProducersService.perform(query);
   }
 
@@ -78,7 +82,6 @@ export class ProducerController {
   @ApiResponse({
     status: 200,
     description: 'Produtor atualizado com sucesso',
-    type: UpdateResult,
   })
   @ApiResponse({
     status: 404,
@@ -96,7 +99,6 @@ export class ProducerController {
   @ApiResponse({
     status: 200,
     description: 'Produtor deletado com sucesso',
-    type: UpdateResult,
   })
   async delete(@Param('id') id: string): Promise<UpdateResult> {
     return this.deleteProducerService.perform(id);

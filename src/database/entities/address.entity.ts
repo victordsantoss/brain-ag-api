@@ -111,6 +111,6 @@ export class Address {
    */
 
   @OneToOne(() => Farm, (farm) => farm.address)
-  @JoinColumn({ name: 'farm_id' })
+  @JoinColumn({ name: 'id_farm' })
   farm: Farm;
 }

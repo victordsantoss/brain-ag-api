@@ -21,9 +21,7 @@ describe('ListProducersService', () => {
       email: faker.internet.email(),
       phone: faker.phone.number(),
       status: BaseEntityStatus.ACTIVE,
-      farms: [],
       createdAt: faker.date.past(),
-      updatedAt: faker.date.recent(),
     }) as Producer;
 
   beforeEach(async () => {

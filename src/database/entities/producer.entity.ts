@@ -4,11 +4,14 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   DeleteDateColumn,
+  Unique,
 } from 'typeorm';
 import { Farm } from './farm.entity';
 import { BaseEntityStatus } from '../../common/enums/status.enum';
 
 @Entity({ name: 'tb_producer' })
+@Unique(['cpf'])
+@Unique(['email'])
 export class Producer {
   @PrimaryGeneratedColumn('uuid', {
     name: 'id',

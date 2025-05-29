@@ -4,8 +4,11 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   DeleteDateColumn,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Harvest } from './harvest.entity';
+import { Farm } from './farm.entity';
 
 @Entity({ name: 'tb_crop' })
 export class Crop {
@@ -65,4 +68,13 @@ export class Crop {
 
   @OneToMany(() => Harvest, (harvest) => harvest.crop)
   harvests: Harvest[];
+
+  @ManyToOne(() => Farm, (farm) => farm.crops, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({
+    name: 'id_farm',
+    referencedColumnName: 'id',
+  })
+  farm: Farm;
 }

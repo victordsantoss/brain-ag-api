@@ -12,6 +12,7 @@ import { Producer } from './producer.entity';
 import { Harvest } from './harvest.entity';
 import { Address } from './address.entity';
 import { BaseEntityStatus } from '../../common/enums/status.enum';
+import { Crop } from './crop.entity';
 
 @Entity({ name: 'tb_farm' })
 export class Farm {
@@ -102,7 +103,7 @@ export class Farm {
     onDelete: 'CASCADE',
   })
   @JoinColumn({
-    name: 'producer_id',
+    name: 'id_producer',
     referencedColumnName: 'id',
   })
   producer: Producer;
@@ -112,4 +113,7 @@ export class Farm {
 
   @OneToOne(() => Address, (address) => address.farm)
   address: Address;
+
+  @OneToMany(() => Crop, (crop) => crop.farm)
+  crops: Crop[];
 }
