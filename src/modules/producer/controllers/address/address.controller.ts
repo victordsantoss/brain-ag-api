@@ -4,7 +4,7 @@ import { IViacepService } from '../../../../integrations/viacep/services/viacep.
 import { CepGuard } from '../../../../common/guards/cep.guard';
 import { AddressResponseDto } from '../../dtos/address/address.response.dto';
 
-@ApiTags('Produtor')
+@ApiTags('Produtor e Propriedade Rural')
 @Controller('address')
 export class AddressController {
   constructor(

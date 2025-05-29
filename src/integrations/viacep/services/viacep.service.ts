@@ -18,8 +18,6 @@ export class ViacepService implements IViacepService {
   async findByCep(cep: string): Promise<ViacepAddressResponseDto> {
     try {
       const cleanedCep = CepFormatter.clean(cep);
-      console.log(cleanedCep, this.baseUrl);
-
       const { data } = await firstValueFrom(
         this.httpService.get<ViacepAddressResponseDto>(
           `${this.baseUrl}/ws/${cleanedCep}/json`,
