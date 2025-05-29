@@ -13,4 +13,6 @@ export interface IProducerRepository
   findByFilters(
     filters: IListProducersRequestDto,
   ): Promise<[Producer[], number]>;
+
+  findByIdWithFarms(id: string): Promise<Producer>;
 }

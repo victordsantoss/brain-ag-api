@@ -26,6 +26,8 @@ import {
   IProducersResponseDto,
   IListProducersResponseDto,
 } from '../../dtos/producer/list.response.dto';
+import { IGetProducerService } from '../../services/producer/get/get.interface';
+import { IGetProducerResponseDto } from '../../dtos/producer/get.response.dto';
 
 @ApiTags('Produtor e Propriedade Rural')
 @Controller('producer')
@@ -42,6 +44,9 @@ export class ProducerController {
 
     @Inject('IDeleteProducerService')
     private readonly deleteProducerService: IDeleteProducerService,
+
+    @Inject('IGetProducerService')
+    private readonly getProducerService: IGetProducerService,
   ) {}
 
   @Post()
@@ -75,6 +80,21 @@ export class ProducerController {
     @Query() query: IListProducersRequestDto,
   ): Promise<BasePaginationResponseDto<IProducersResponseDto>> {
     return await this.listProducersService.perform(query);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Buscar detalhes de um produtor' })
+  @ApiResponse({
+    status: 200,
+    description: 'Detalhes do produtor retornados com sucesso.',
+    type: IGetProducerResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Produtor não encontrado.',
+  })
+  async get(@Param('id') id: string): Promise<IGetProducerResponseDto> {
+    return await this.getProducerService.perform(id);
   }
 
   @Patch(':id')

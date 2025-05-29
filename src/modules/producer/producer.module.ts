@@ -9,11 +9,20 @@ import { farmProviders } from './providers/farm.provider';
 import { IntegrationsModule } from '../../integrations/integrations.module';
 import { addressProviders } from './providers/address.provider';
 import { AddressController } from './controllers/address/address.controller';
+import { GetProducerService } from './services/producer/get/get.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Producer, Farm]), IntegrationsModule],
   controllers: [ProducerController, FarmController, AddressController],
-  providers: [...producerProviders, ...farmProviders, ...addressProviders],
+  providers: [
+    ...producerProviders,
+    ...farmProviders,
+    ...addressProviders,
+    {
+      provide: 'IGetProducerService',
+      useClass: GetProducerService,
+    },
+  ],
   exports: [...producerProviders, ...farmProviders, ...addressProviders],
 })
 export class ProducerModule {}

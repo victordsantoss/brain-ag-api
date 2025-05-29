@@ -14,8 +14,11 @@ export class ProducerRepository
     super(dataSource, Producer);
   }
 
-  async findById(id: string): Promise<Producer | null> {
-    return this.repository.findOneBy({ id });
+  async findByIdWithFarms(id: string): Promise<Producer> {
+    return this.repository.findOne({
+      where: { id },
+      relations: ['farms'],
+    });
   }
 
   async findByFilters(
