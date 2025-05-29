@@ -10,6 +10,7 @@ import { IRegisterHarvestService } from './register.service.interface';
 import { IHarvestRepository } from '../../../repositories/harvest/harvest.interface';
 import { IFarmRepository } from 'src/modules/producer/repositories/farm/farm.interface';
 import { Farm } from 'src/database/entities/farm.entity';
+import { ICultureRepository } from 'src/modules/harvest/repositories/culture/culture.interface';
 
 @Injectable()
 export class RegisterHarvestService implements IRegisterHarvestService {
@@ -20,6 +21,9 @@ export class RegisterHarvestService implements IRegisterHarvestService {
 
     @Inject('IFarmRepository')
     private readonly farmRepository: IFarmRepository,
+
+    @Inject('ICultureRepository')
+    private readonly cultureRepository: ICultureRepository,
   ) {}
 
   async perform(data: IRegisterHarvestRequestDto): Promise<any> {
@@ -27,6 +31,7 @@ export class RegisterHarvestService implements IRegisterHarvestService {
       this.logger.log(`Executando perform`);
       const farm = await this.findFarmById(data.farmId);
       await this.validateArea(farm, data.area);
+      await this.validateCulture(data.cultureId);
 
       return await this.harvestRepository.create({
         ...data,
@@ -45,6 +50,14 @@ export class RegisterHarvestService implements IRegisterHarvestService {
       throw new BadRequestException('Fazenda não encontrada');
     }
     return farm;
+  }
+
+  private async validateCulture(cultureId: string): Promise<void> {
+    this.logger.log(`Executando findCultureById com o id ${cultureId}`);
+    const culture = await this.cultureRepository.findById(cultureId);
+    if (!culture) {
+      throw new BadRequestException('Cultura não encontrada');
+    }
   }
 
   private async validateArea(farm: Farm, area: number): Promise<void> {
