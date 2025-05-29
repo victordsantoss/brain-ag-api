@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Farm } from './farm.entity';
-import { Crop } from './crop.entity';
+import { Culture } from './culture.entity';
 import { HarvestSeason } from '../../common/enums/harvest-season.enum';
 
 @Entity({ name: 'tb_harvest' })
@@ -90,15 +90,17 @@ export class Harvest {
 
   @ManyToOne(() => Farm, (farm) => farm.harvests, { onDelete: 'CASCADE' })
   @JoinColumn({
-    name: 'id_far',
+    name: 'id_farm',
     referencedColumnName: 'id',
   })
   farm: Farm;
 
-  @ManyToOne(() => Crop, (crop) => crop.harvests, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Culture, (culture) => culture.harvests, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
-    name: 'id_crop',
+    name: 'id_culture',
     referencedColumnName: 'id',
   })
-  crop: Crop;
+  culture: Culture;
 }

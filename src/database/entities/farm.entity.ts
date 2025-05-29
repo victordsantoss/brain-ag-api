@@ -12,7 +12,7 @@ import { Producer } from './producer.entity';
 import { Harvest } from './harvest.entity';
 import { Address } from './address.entity';
 import { BaseEntityStatus } from '../../common/enums/status.enum';
-import { Crop } from './crop.entity';
+import { Culture } from './culture.entity';
 
 @Entity({ name: 'tb_farm' })
 export class Farm {
@@ -114,6 +114,6 @@ export class Farm {
   @OneToOne(() => Address, (address) => address.farm)
   address: Address;
 
-  @OneToMany(() => Crop, (crop) => crop.farm)
-  crops: Crop[];
+  @OneToMany(() => Culture, (culture) => culture.farm)
+  cultures: Culture[];
 }

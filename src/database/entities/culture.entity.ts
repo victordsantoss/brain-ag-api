@@ -6,12 +6,14 @@ import {
   DeleteDateColumn,
   JoinColumn,
   ManyToOne,
+  Unique,
 } from 'typeorm';
 import { Harvest } from './harvest.entity';
 import { Farm } from './farm.entity';
 
-@Entity({ name: 'tb_crop' })
-export class Crop {
+@Entity({ name: 'tb_culture' })
+@Unique(['name', 'farm'])
+export class Culture {
   @PrimaryGeneratedColumn('uuid', {
     name: 'id',
     comment: 'ID único da cultura (UUID)',
@@ -66,10 +68,10 @@ export class Crop {
    * RELACIONAMENTOS
    */
 
-  @OneToMany(() => Harvest, (harvest) => harvest.crop)
+  @OneToMany(() => Harvest, (harvest) => harvest.culture)
   harvests: Harvest[];
 
-  @ManyToOne(() => Farm, (farm) => farm.crops, {
+  @ManyToOne(() => Farm, (farm) => farm.cultures, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({

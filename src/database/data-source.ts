@@ -2,11 +2,11 @@ import { DataSource } from 'typeorm';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import { Producer } from './entities/producer.entity';
 import { Farm } from './entities/farm.entity';
-import { Crop } from './entities/crop.entity';
+import { Culture } from './entities/culture.entity';
 import { Harvest } from './entities/harvest.entity';
 import { Address } from './entities/address.entity';
 
-export const entities = [Producer, Farm, Address, Crop, Harvest];
+export const entities = [Producer, Farm, Address, Culture, Harvest];
 
 export const createDataSource = () => {
   const port = process.env.DATABASE_PORT
