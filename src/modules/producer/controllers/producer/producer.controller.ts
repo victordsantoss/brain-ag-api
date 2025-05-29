@@ -23,7 +23,7 @@ import { IUpdateProducerRequestDto } from '../../dtos/producer/update.request.dt
 import { UpdateResult } from 'typeorm';
 import { IDeleteProducerService } from '../../services/producer/delete/delete.interface';
 
-@ApiTags('Produtores')
+@ApiTags('Produtor')
 @Controller('producer')
 export class ProducerController {
   constructor(
