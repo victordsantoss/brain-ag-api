@@ -6,10 +6,13 @@ import { ProducerController } from './controllers/producer/producer.controller';
 import { FarmController } from './controllers/farm/farm.controller';
 import { producerProviders } from './providers/producer.provider';
 import { farmProviders } from './providers/farm.provider';
+import { IntegrationsModule } from 'src/integrations/integrations.module';
+import { addressProviders } from './providers/address.provider';
+import { AddressController } from './controllers/address/address.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Producer, Farm])],
-  controllers: [ProducerController, FarmController],
-  providers: [...producerProviders, ...farmProviders],
+  imports: [TypeOrmModule.forFeature([Producer, Farm]), IntegrationsModule],
+  controllers: [ProducerController, FarmController, AddressController],
+  providers: [...producerProviders, ...farmProviders, ...addressProviders],
 })
 export class ProducerModule {}

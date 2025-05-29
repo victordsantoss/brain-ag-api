@@ -4,8 +4,8 @@ import { Farm } from 'src/database/entities/farm.entity';
 import { IRegisterFarmRequestDto } from '../../dtos/farm/register.request.dto';
 import { IRegisterFarmService } from '../../services/farm/register/register.interface';
 
-@ApiTags('Propriedade Rural')
-@Controller('producers/:producerId/farms')
+@ApiTags('Produtor')
+@Controller('farm')
 export class FarmController {
   constructor(
     @Inject('IRegisterFarmService')
