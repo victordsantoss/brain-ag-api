@@ -8,7 +8,7 @@ import {
 import { IProducerRepository } from '../../../repositories/producer/producer.interface';
 
 import { UpdateResult } from 'typeorm';
-import { Producer } from 'src/database/entities/producer.entity';
+import { Producer } from '../../../../../database/entities/producer.entity';
 import { IDeleteProducerService } from './delete.interface';
 
 @Injectable()

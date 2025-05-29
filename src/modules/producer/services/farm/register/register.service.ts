@@ -7,11 +7,11 @@ import {
 import { IRegisterFarmRequestDto } from '../../../dtos/farm/register.request.dto';
 import { Farm } from '../../../../../database/entities/farm.entity';
 import { IRegisterFarmService } from './register.interface';
-import { IFarmRepository } from 'src/modules/producer/repositories/farm/farm.interface';
-import { IProducerRepository } from 'src/modules/producer/repositories/producer/producer.interface';
-import { IViacepService } from 'src/integrations/viacep/services/viacep.interface';
-import { Address } from 'src/database/entities/address.entity';
-import { IAddressRepository } from 'src/modules/producer/repositories/address/address.interface';
+import { IFarmRepository } from '../../../repositories/farm/farm.interface';
+import { IProducerRepository } from '../../../repositories/producer/producer.interface';
+import { IViacepService } from '../../../../../integrations/viacep/services/viacep.interface';
+import { Address } from '../../../../../database/entities/address.entity';
+import { IAddressRepository } from '../../../repositories/address/address.interface';
 
 @Injectable()
 export class RegisterFarmService implements IRegisterFarmService {

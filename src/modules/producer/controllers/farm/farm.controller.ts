@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Inject } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Farm } from 'src/database/entities/farm.entity';
+import { Farm } from '../../../../database/entities/farm.entity';
 import { IRegisterFarmRequestDto } from '../../dtos/farm/register.request.dto';
 import { IRegisterFarmService } from '../../services/farm/register/register.interface';
 
@@ -13,7 +13,9 @@ export class FarmController {
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Criar uma nova fazenda vinculada a um produtor' })
+  @ApiOperation({
+    summary: 'Registrar uma nova fazenda vinculada a um produtor',
+  })
   @ApiResponse({
     status: 201,
     description: 'Fazenda criada com sucesso',

@@ -11,6 +11,7 @@ import {
 import { Producer } from './producer.entity';
 import { Harvest } from './harvest.entity';
 import { Address } from './address.entity';
+import { BaseEntityStatus } from '../../common/enums/status.enum';
 
 @Entity({ name: 'tb_farm' })
 export class Farm {
@@ -58,6 +59,13 @@ export class Farm {
     comment: 'Área de vegetação da fazenda em hectares',
   })
   vegetationArea: number;
+
+  @Column({
+    name: 'status',
+    type: 'varchar',
+    default: BaseEntityStatus.ACTIVE,
+  })
+  status: BaseEntityStatus;
 
   @Column({
     name: 'created_at',

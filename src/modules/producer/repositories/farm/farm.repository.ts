@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Farm } from '../../../../database/entities/farm.entity';
-import { BaseRepository } from 'src/common/repositories/base.repository';
+import { BaseRepository } from '../../../../common/repositories/base.repository';
 import { IFarmRepository } from './farm.interface';
 
 @Injectable()

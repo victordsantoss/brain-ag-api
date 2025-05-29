@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { IViacepService } from './viacep.interface';
-import { CepFormatter } from 'src/common/utils/formatters/cep.formatter';
+import { CepFormatter } from '../../../common/utils/formatters/cep.formatter';
 import { ViacepAddressResponseDto } from '../dtos/address.response';
 
 @Injectable()
