@@ -8,8 +8,8 @@ import {
 import { IProducerRepository } from '../../../repositories/producer/producer.interface';
 import { IGetProducerService } from './get.interface';
 import { IGetProducerResponseDto } from '../../../dtos/producer/get.response.dto';
-import { Farm } from 'src/database/entities/farm.entity';
-import { Producer } from 'src/database/entities/producer.entity';
+import { Farm } from '../../../../../database/entities/farm.entity';
+import { Producer } from '../../../../../database/entities/producer.entity';
 
 @Injectable()
 export class GetProducerService implements IGetProducerService {

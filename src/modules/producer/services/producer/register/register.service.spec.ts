@@ -170,6 +170,7 @@ describe('RegisterProducerService', () => {
 
     it('should throw InternalServerErrorException when create operation fails', async () => {
       const producerData = {
+        id: faker.string.uuid(),
         name: faker.person.fullName(),
         cpf: faker.string.numeric(11),
         email: faker.internet.email(),

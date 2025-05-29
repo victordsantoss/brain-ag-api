@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsDate } from 'class-validator';
+import { IsEnum, IsDate, IsUUID } from 'class-validator';
 import { BaseEntityStatus } from '../../../../common/enums/status.enum';
 import { IBaseProducerRequestDto } from './base.dto';
 
@@ -18,6 +18,13 @@ export class IGetProducerFarmResponseDto {
 }
 
 export class IGetProducerResponseDto extends IBaseProducerRequestDto {
+  @ApiProperty({
+    description: 'ID único do produtor',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @IsUUID()
+  id: string;
+
   @ApiProperty({
     description: 'Status do produtor',
     enum: BaseEntityStatus,

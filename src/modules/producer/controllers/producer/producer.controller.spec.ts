@@ -13,6 +13,7 @@ import {
 import { CpfGuard } from '../../../../common/guards/cpf.guard';
 import { IListProducersService } from '../../services/producer/list/list.interface';
 import { BasePaginationResponseDto } from '../../../../common/dtos/base-pagination.response.dto';
+import { IGetProducerResponseDto } from '../../dtos/producer/get.response.dto';
 
 describe('ProducerController', () => {
   let controller: ProducerController;
@@ -35,6 +36,10 @@ describe('ProducerController', () => {
     perform: jest.fn(),
   };
 
+  const mockGetProducerService = {
+    perform: jest.fn(),
+  };
+
   const createMockProducer = (): Producer =>
     ({
       id: faker.string.uuid(),
@@ -46,6 +51,7 @@ describe('ProducerController', () => {
       farms: [],
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
+      deletedAt: null,
     }) as Producer;
 
   beforeEach(async () => {
@@ -73,6 +79,10 @@ describe('ProducerController', () => {
         {
           provide: 'IDeleteProducerService',
           useValue: mockDeleteProducerService,
+        },
+        {
+          provide: 'IGetProducerService',
+          useValue: mockGetProducerService,
         },
       ],
     })
@@ -366,6 +376,59 @@ describe('ProducerController', () => {
       expect(mockDeleteProducerService.perform).toHaveBeenCalledWith(
         producerId,
       );
+    });
+  });
+
+  describe('get', () => {
+    it('should successfully get producer details', async () => {
+      const producerId = faker.string.uuid();
+      const mockProducer = createMockProducer();
+      const expectedResponse: IGetProducerResponseDto = {
+        id: mockProducer.id,
+        name: mockProducer.name,
+        cpf: mockProducer.cpf,
+        email: mockProducer.email,
+        phone: mockProducer.phone,
+        status: mockProducer.status,
+        farms: mockProducer.farms.map((farm) => ({
+          id: farm.id,
+          name: farm.name,
+        })),
+        createdAt: mockProducer.createdAt,
+      };
+
+      mockGetProducerService.perform.mockResolvedValue(expectedResponse);
+
+      const result = await controller.get(producerId);
+
+      expect(result).toEqual(expectedResponse);
+      expect(mockGetProducerService.perform).toHaveBeenCalledWith(producerId);
+    });
+
+    it('should throw NotFoundException when producer is not found', async () => {
+      const producerId = faker.string.uuid();
+
+      mockGetProducerService.perform.mockRejectedValue(
+        new NotFoundException('Produtor não encontrado'),
+      );
+
+      await expect(controller.get(producerId)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(mockGetProducerService.perform).toHaveBeenCalledWith(producerId);
+    });
+
+    it('should throw InternalServerErrorException when service throws error', async () => {
+      const producerId = faker.string.uuid();
+
+      mockGetProducerService.perform.mockRejectedValue(
+        new InternalServerErrorException('Erro ao buscar detalhes do produtor'),
+      );
+
+      await expect(controller.get(producerId)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+      expect(mockGetProducerService.perform).toHaveBeenCalledWith(producerId);
     });
   });
 });
