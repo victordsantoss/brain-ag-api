@@ -126,7 +126,7 @@ export class IRegisterFarmRequestDto {
   @IsNotEmpty({ message: 'A área agricultável é obrigatória' })
   @IsNumber({}, { message: 'A área agricultável deve ser um número' })
   @Min(0, { message: 'A área agricultável deve ser maior ou igual a zero' })
-  arableArea: number;
+  cultivatedArea: number;
 
   @ApiProperty({
     description: 'Área de vegetação em hectares',

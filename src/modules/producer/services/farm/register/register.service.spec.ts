@@ -58,7 +58,7 @@ describe('RegisterFarmService', () => {
     id: faker.string.uuid(),
     name: faker.company.name(),
     totalArea: faker.number.float({ min: 0, max: 1000 }),
-    arableArea: faker.number.float({ min: 0, max: 1000 }),
+    cultivatedArea: faker.number.float({ min: 0, max: 1000 }),
     vegetationArea: faker.number.float({ min: 0, max: 1000 }),
     status: BaseEntityStatus.ACTIVE,
     address: createMockAddress,
@@ -108,7 +108,7 @@ describe('RegisterFarmService', () => {
         producerId: faker.string.uuid(),
         name: faker.company.name(),
         totalArea: faker.number.float({ min: 0, max: 1000 }),
-        arableArea: faker.number.float({ min: 0, max: 1000 }),
+        cultivatedArea: faker.number.float({ min: 0, max: 1000 }),
         vegetationArea: faker.number.float({ min: 0, max: 1000 }),
         address: {
           street: faker.location.street(),
@@ -142,7 +142,7 @@ describe('RegisterFarmService', () => {
         producerId: faker.string.uuid(),
         name: faker.company.name(),
         totalArea: faker.number.float({ min: 0, max: 1000 }),
-        arableArea: faker.number.float({ min: 0, max: 1000 }),
+        cultivatedArea: faker.number.float({ min: 0, max: 1000 }),
         vegetationArea: faker.number.float({ min: 0, max: 1000 }),
         address: {
           street: faker.location.street(),
@@ -171,7 +171,7 @@ describe('RegisterFarmService', () => {
         producerId: faker.string.uuid(),
         name: faker.company.name(),
         totalArea: faker.number.float({ min: 0, max: 1000 }),
-        arableArea: faker.number.float({ min: 0, max: 1000 }),
+        cultivatedArea: faker.number.float({ min: 0, max: 1000 }),
         vegetationArea: faker.number.float({ min: 0, max: 1000 }),
         address: {
           street: faker.location.street(),

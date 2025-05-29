@@ -14,5 +14,6 @@ import { AddressController } from './controllers/address/address.controller';
   imports: [TypeOrmModule.forFeature([Producer, Farm]), IntegrationsModule],
   controllers: [ProducerController, FarmController, AddressController],
   providers: [...producerProviders, ...farmProviders, ...addressProviders],
+  exports: [...producerProviders, ...farmProviders, ...addressProviders],
 })
 export class ProducerModule {}

@@ -49,7 +49,7 @@ export class Farm {
     nullable: false,
     comment: 'Área agricultável da fazenda em hectares',
   })
-  arableArea: number;
+  cultivatedArea: number;
 
   @Column({
     name: 'vegetation_area',
