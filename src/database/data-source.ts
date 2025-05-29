@@ -4,8 +4,9 @@ import { Producer } from './entities/producer.entity';
 import { Farm } from './entities/farm.entity';
 import { Crop } from './entities/crop.entity';
 import { Harvest } from './entities/harvest.entity';
+import { Address } from './entities/address.entity';
 
-export const entities = [Producer, Farm, Crop, Harvest];
+export const entities = [Producer, Farm, Address, Crop, Harvest];
 
 export const createDataSource = () => {
   const port = process.env.DATABASE_PORT

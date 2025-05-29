@@ -4,11 +4,13 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   JoinColumn,
   DeleteDateColumn,
 } from 'typeorm';
 import { Producer } from './producer.entity';
 import { Harvest } from './harvest.entity';
+import { Address } from './address.entity';
 
 @Entity({ name: 'tb_farm' })
 export class Farm {
@@ -28,41 +30,34 @@ export class Farm {
   name: string;
 
   @Column({
-    name: 'address',
-    type: 'varchar',
-    length: 200,
-    nullable: false,
-    comment: 'Endereço completo da fazenda',
-  })
-  address: string;
-
-  @Column({
-    name: 'city',
-    type: 'varchar',
-    length: 100,
-    nullable: false,
-    comment: 'Cidade onde está localizada a fazenda',
-  })
-  city: string;
-
-  @Column({
-    name: 'state',
-    type: 'varchar',
-    length: 2,
-    nullable: false,
-    comment: 'Estado onde está localizada a fazenda (UF)',
-  })
-  state: string;
-
-  @Column({
-    name: 'area',
+    name: 'total_area',
     type: 'decimal',
     precision: 10,
     scale: 2,
     nullable: false,
     comment: 'Área total da fazenda em hectares',
   })
-  area: number;
+  totalArea: number;
+
+  @Column({
+    name: 'arable_area',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: false,
+    comment: 'Área agricultável da fazenda em hectares',
+  })
+  arableArea: number;
+
+  @Column({
+    name: 'vegetation_area',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: false,
+    comment: 'Área de vegetação da fazenda em hectares',
+  })
+  vegetationArea: number;
 
   @Column({
     name: 'created_at',
@@ -106,4 +101,7 @@ export class Farm {
 
   @OneToMany(() => Harvest, (harvest) => harvest.farm)
   harvests: Harvest[];
+
+  @OneToOne(() => Address, (address) => address.farm)
+  address: Address;
 }
