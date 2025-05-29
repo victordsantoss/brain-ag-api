@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { IViacepService } from './viacep.interface';
@@ -28,10 +32,9 @@ export class ViacepService implements IViacepService {
 
       return data;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new NotFoundException('Endereço não encontrado');
+      throw (
+        error ?? new InternalServerErrorException(`Erro ao salvar produtor`)
+      );
     }
   }
 }
