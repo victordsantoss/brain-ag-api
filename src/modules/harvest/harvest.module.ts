@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Culture } from 'src/database/entities/culture.entity';
-import { Harvest } from 'src/database/entities/harvest.entity';
+import { Culture } from '../../database/entities/culture.entity';
+import { Harvest } from '../../database/entities/harvest.entity';
 import { CultureController } from './controllers/culture/culture.controller';
 import { HarvestController } from './controllers/harvest/harvest.controller';
 import { cultureProviders } from './providers/culture/culture.provider';

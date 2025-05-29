@@ -4,13 +4,14 @@ import {
   InternalServerErrorException,
   BadRequestException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { IRegisterHarvestRequestDto } from '../../../dtos/harvest/register.request.dto';
 import { IRegisterHarvestService } from './register.service.interface';
 import { IHarvestRepository } from '../../../repositories/harvest/harvest.interface';
-import { IFarmRepository } from 'src/modules/producer/repositories/farm/farm.interface';
-import { Farm } from 'src/database/entities/farm.entity';
-import { ICultureRepository } from 'src/modules/harvest/repositories/culture/culture.interface';
+import { IFarmRepository } from '../../../../producer/repositories/farm/farm.interface';
+import { Farm } from '../../../../../database/entities/farm.entity';
+import { ICultureRepository } from '../../../repositories/culture/culture.interface';
 
 @Injectable()
 export class RegisterHarvestService implements IRegisterHarvestService {
@@ -47,7 +48,7 @@ export class RegisterHarvestService implements IRegisterHarvestService {
     this.logger.log(`Executando findFarmById com o id ${farmId}`);
     const farm = await this.farmRepository.findById(farmId);
     if (!farm) {
-      throw new BadRequestException('Fazenda não encontrada');
+      throw new NotFoundException('Fazenda não encontrada');
     }
     return farm;
   }
@@ -56,7 +57,7 @@ export class RegisterHarvestService implements IRegisterHarvestService {
     this.logger.log(`Executando findCultureById com o id ${cultureId}`);
     const culture = await this.cultureRepository.findById(cultureId);
     if (!culture) {
-      throw new BadRequestException('Cultura não encontrada');
+      throw new NotFoundException('Cultura não encontrada');
     }
   }
 

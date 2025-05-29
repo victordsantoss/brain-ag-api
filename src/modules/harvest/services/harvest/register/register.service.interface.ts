@@ -1,4 +1,4 @@
-import { Harvest } from 'src/database/entities/harvest.entity';
+import { Harvest } from '../../../../../database/entities/harvest.entity';
 import { IRegisterHarvestRequestDto } from '../../../dtos/harvest/register.request.dto';
 
 export interface IRegisterHarvestService {

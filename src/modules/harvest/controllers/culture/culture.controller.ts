@@ -1,6 +1,6 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
-import { Culture } from 'src/database/entities/culture.entity';
+import { Culture } from '../../../../database/entities/culture.entity';
 import { IRegisterCultureRequestDto } from '../../dtos/culture/register.request.dto';
 import { IRegisterCultureService } from '../../services/culture/register/register.service.interface';
 

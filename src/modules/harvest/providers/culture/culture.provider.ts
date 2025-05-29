@@ -1,5 +1,5 @@
 import { CultureRepository } from '../../repositories/culture/culture.repository';
-import { RegisterCultureService } from '../../services/culture/register/register';
+import { RegisterCultureService } from '../../services/culture/register/register.service';
 
 export const cultureProviders = [
   {

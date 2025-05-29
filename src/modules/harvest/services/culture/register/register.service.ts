@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { Culture } from 'src/database/entities/culture.entity';
+import { Culture } from '../../../../../database/entities/culture.entity';
 import { IRegisterCultureRequestDto } from '../../../dtos/culture/register.request.dto';
 import { IRegisterCultureService } from './register.service.interface';
 import { ICultureRepository } from '../../../repositories/culture/culture.interface';

@@ -1,6 +1,6 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
-import { Harvest } from 'src/database/entities/harvest.entity';
+import { Harvest } from '../../../../database/entities/harvest.entity';
 import { IRegisterHarvestRequestDto } from '../../dtos/harvest/register.request.dto';
 import { IRegisterHarvestService } from '../../services/harvest/register/register.service.interface';
 

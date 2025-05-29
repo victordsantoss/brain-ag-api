@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsOptional, IsUUID, Min } from 'class-validator';
-import { HarvestSeason } from 'src/common/enums/harvest-season.enum';
+import { HarvestSeason } from '../../../../common/enums/harvest-season.enum';
 
 export class IBaseHarvestRequestDto {
   @ApiProperty({

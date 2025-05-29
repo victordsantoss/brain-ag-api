@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { Harvest } from 'src/database/entities/harvest.entity';
+import { Harvest } from '../../../../database/entities/harvest.entity';
 import { IHarvestRepository } from './harvest.interface';
-import { BaseRepository } from 'src/common/repositories/base.repository';
+import { BaseRepository } from '../../../../common/repositories/base.repository';
 
 @Injectable()
 export class HarvestRepository
