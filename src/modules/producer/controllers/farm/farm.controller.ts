@@ -6,6 +6,10 @@ import { IRegisterFarmService } from '../../services/farm/register/register.inte
 import { IListTopFarmsService } from '../../services/farm/list-top-farms/list-top-farms.interface';
 import { IListTopFarmResponseDto } from '../../dtos/farm/list-top-farms.response.dto';
 import { IListTopFarmsRequestDto } from '../../dtos/farm/list-top-farms.request.dto';
+import { IListFarmsRequestDto } from '../../dtos/farm/list.request.dto';
+import { IFarmsResponseDto } from '../../dtos/farm/list.response.dto';
+import { BasePaginationResponseDto } from 'src/common/dtos/base-pagination.response.dto';
+import { IListFarmsService } from '../../services/farm/list/list.interface';
 
 @ApiTags('Produtor e Propriedade Rural')
 @Controller('farm')
@@ -16,6 +20,9 @@ export class FarmController {
 
     @Inject('IListTopFarmsService')
     private readonly listTopFarmsService: IListTopFarmsService,
+
+    @Inject('IListFarmsService')
+    private readonly listFarmsService: IListFarmsService,
   ) {}
 
   @Post()
@@ -48,5 +55,20 @@ export class FarmController {
     @Query() filters?: IListTopFarmsRequestDto,
   ): Promise<IListTopFarmResponseDto[]> {
     return await this.listTopFarmsService.perform(filters);
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: 'Listar propriedades rurais de maneira paginada e filtrável',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de propriedades rurais retornada com sucesso.',
+    type: IListFarmsRequestDto,
+  })
+  async list(
+    @Query() query: IListFarmsRequestDto,
+  ): Promise<BasePaginationResponseDto<IFarmsResponseDto>> {
+    return await this.listFarmsService.perform(query);
   }
 }

@@ -1,5 +1,6 @@
 import { FarmRepository } from '../repositories/farm/farm.repository';
 import { RegisterFarmService } from '../services/farm/register/register.service';
+import { ListFarmsService } from '../services/farm/list/list.service';
 
 export const farmProviders = [
   {
@@ -9,5 +10,9 @@ export const farmProviders = [
   {
     provide: 'IFarmRepository',
     useClass: FarmRepository,
+  },
+  {
+    provide: 'IListFarmsService',
+    useClass: ListFarmsService,
   },
 ];

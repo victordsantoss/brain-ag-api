@@ -4,6 +4,7 @@ import { Farm } from '../../../../database/entities/farm.entity';
 import { BaseRepository } from '../../../../common/repositories/base.repository';
 import { IFarmRepository } from './farm.interface';
 import { IListTopFarmsRequestDto } from '../../dtos/farm/list-top-farms.request.dto';
+import { IListFarmsRequestDto } from '../../dtos/farm/list.request.dto';
 
 @Injectable()
 export class FarmRepository
@@ -49,5 +50,36 @@ export class FarmRepository
       .orderBy('harvest.actualProduction', 'DESC')
       .take(3)
       .getMany();
+  }
+
+  async findByFilters(
+    filters: IListFarmsRequestDto,
+  ): Promise<[Farm[], number]> {
+    const {
+      page = 1,
+      limit = 10,
+      orderBy = 'name',
+      sortBy = 'ASC',
+      search,
+    } = filters;
+
+    const queryBuilder = this.repository
+      .createQueryBuilder('farm')
+      .leftJoinAndSelect('farm.producer', 'producer')
+      .leftJoinAndSelect('farm.address', 'address');
+
+    if (search) {
+      queryBuilder.where(
+        '(LOWER(farm.name) LIKE LOWER(:search) OR LOWER(producer.name) LIKE LOWER(:search))',
+        { search: `%${search}%` },
+      );
+    }
+
+    queryBuilder
+      .orderBy(`farm.${orderBy}`, sortBy)
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    return queryBuilder.getManyAndCount();
   }
 }
