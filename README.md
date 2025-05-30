@@ -1,73 +1,181 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Brain AG API - Sistema de Gestão Agrícola
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Visão Geral
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Este projeto é uma API baseada em NestJS para gerenciamento de produtores agrícolas, fazendas, culturas e colheitas. Fornece um sistema para acompanhamento da produção agrícola, gestão de dados de fazendas e análise de resultados de colheitas.
 
-## Description
+## Funcionalidades
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Gestão de produtores (operações CRUD)
+- Gestão de fazendas com cálculos de área
+- Acompanhamento de culturas por fazenda
+- Registros de colheitas com métricas de produção
+- Análise de produtores e fazendas mais produtivas
+- Gestão de endereços das fazendas
+- Funcionalidade de exclusão suave (soft delete)
+- Paginação e filtros para operações de listagem
 
-## Installation
+## Modelagem do Banco de Dados
 
-```bash
-$ npm install
+```mermaid
+erDiagram
+    Producer ||--o{ Farm : "possui"
+    Farm ||--o{ Culture : "possui"
+    Farm ||--o{ Harvest : "possui"
+    Culture ||--o{ Harvest : "possui"
+    Farm ||--|| Address : "possui"
+
+    Producer {
+        uuid id PK
+        string name
+        string cpf UK
+        string email UK
+        string phone
+        enum status
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    Farm {
+        uuid id PK
+        string name
+        decimal total_area
+        decimal cultivation_area
+        decimal vegetation_area
+        enum status
+        uuid id_producer FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    Culture {
+        uuid id PK
+        string name
+        text description
+        uuid id_farm FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    Harvest {
+        uuid id PK
+        int year
+        enum season
+        decimal area
+        decimal expected_production
+        decimal actual_production
+        uuid id_farm FK
+        uuid id_culture FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Address {
+        uuid id PK
+        string street
+        string number
+        string complement
+        string neighborhood
+        string city
+        string state
+        string zip_code
+        uuid id_farm FK
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
 ```
 
-## Running the app
+## Relacionamentos entre Entidades
 
-```bash
-# development
-$ npm run start
+### Produtor
 
-# watch mode
-$ npm run start:dev
+- Relacionamento Um-para-Muitos com Fazenda
+- Restrições únicas em CPF e email
+- Exclusão lógica habilitada
 
-# production mode
-$ npm run start:prod
-```
+### Fazenda
 
-## Test
+- Relacionamento Muitos-para-Um com Produtor
+- Relacionamento Um-para-Muitos com Cultura
+- Relacionamento Um-para-Muitos com Colheita
+- Relacionamento Um-para-Um com Endereço
+- Exclusão lógica habilitada
 
-```bash
-# unit tests
-$ npm run test
+### Cultura
 
-# e2e tests
-$ npm run test:e2e
+- Relacionamento Muitos-para-Um com Fazenda
+- Relacionamento Um-para-Muitos com Colheita
+- Exclusão lógica habilitada
+- Restrição única de nome por fazenda
 
-# test coverage
-$ npm run test:cov
-```
+### Colheita
 
-## Support
+- Relacionamento Muitos-para-Um com Fazenda
+- Relacionamento Muitos-para-Um com Cultura
+- Acompanhamento de ano, estação, área e métricas de produção
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Endereço
 
-## Stay in touch
+- Relacionamento Um-para-Um com Fazenda
+- Exclusão lógica habilitada
+- Armazena informações completas de endereço
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Stack Tecnológica
 
-## License
+- Framework NestJS
+- TypeScript
+- TypeORM
+- Docker & Docker Compose
+- PostgreSQL
+- Jest para testes
+- Swagger para documentação da API
 
-Nest is [MIT licensed](LICENSE).
+## Endpoints da API
+
+### Endpoints de Integrações Externas
+
+- `GET /address/:cep` - Obter detalhes de um endereço por CEP
+
+### Endpoints de Produtor
+
+- `POST /producer` - Registrar um produtor
+- `GET /producer` - Listar produtores com paginação e filtrável
+- `GET /producer/top` - Listar os 3 maiores produtores por produção real
+- `GET /producer/:id` - Obter detalhes do produtor
+- `PATCH /producer/:id` - Atualizar produtor
+- `DELETE /producer/:id` - Deletar produtor Logicamente
+
+### Endpoints de Fazenda
+
+- `POST /farm` - Registrar nova propriedade rural
+- `GET /farm` - Listar propriedades rurais com paginação e filtrável
+- `GET /farm/top` - Obter propriedades rurais mais produtivas com base na produção real, por ano, cultura ou estado
+
+### Endpoints de Cultura
+
+- `POST /culture` - Registrar nova cultura vinculada a uma propriedade rural
+
+### Endpoints de Colheita
+
+- `POST /harvest` - Registrar nova safra em uma propriedade rural vinculada a uma cultura
+- `GET /harvest/top` - Listar as 3 maiores safras com base na produção real por ano, cultura ou estado
+
+## Validação de Dados
+
+- Validação de CPF
+- Validação de área (cultivada + vegetação ≤ total)
+- Validação de formato de email
+- Validação de campos obrigatórios
+- Aplicação de restrições únicas
+
+## Tratamento de Erros
+
+- Filtros de exceção personalizados
+- Pipes de validação
+- Tratamento global de erros
+- Códigos de status HTTP apropriados
+- Mensagens de erro detalhadas
