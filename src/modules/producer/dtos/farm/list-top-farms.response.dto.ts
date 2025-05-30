@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsUUID } from 'class-validator';
+import { IsString, IsNumber, IsUUID, IsArray } from 'class-validator';
 
 export class IListTopFarmResponseDto {
   @ApiProperty({
@@ -35,4 +35,11 @@ export class IListTopFarmResponseDto {
   })
   @IsString()
   producerName: string;
+
+  @ApiProperty({
+    description: 'Culturas da fazenda',
+    example: ['Soja', 'Milho', 'Café'],
+  })
+  @IsArray()
+  cultures: string[];
 }

@@ -34,6 +34,7 @@ export class ListTopFarmsService implements IListTopFarmsService {
       state: farm.address.state,
       totalProduction,
       producerName: farm.producer.name,
+      cultures: farm.harvests.map((harvest) => harvest.culture.name),
     };
   }
 }

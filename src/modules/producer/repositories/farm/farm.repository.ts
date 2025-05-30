@@ -22,13 +22,23 @@ export class FarmRepository
       .leftJoinAndSelect('farm.producer', 'producer')
       .leftJoinAndSelect('farm.harvests', 'harvest')
       .leftJoinAndSelect('farm.address', 'address')
+      .leftJoinAndSelect('harvest.culture', 'culture')
       .select('farm')
       .addSelect('producer')
       .addSelect('harvest')
-      .addSelect('address');
+      .addSelect('address')
+      .addSelect('culture');
 
     if (filters?.state) {
-      queryBuilder.andWhere('address.state = :state', { state: filters.state });
+      queryBuilder.andWhere('LOWER(address.state) = LOWER(:state)', {
+        state: filters.state,
+      });
+    }
+
+    if (filters?.cultureName) {
+      queryBuilder.andWhere('LOWER(culture.name) = LOWER(:cultureName)', {
+        cultureName: filters.cultureName,
+      });
     }
 
     return queryBuilder
