@@ -27,6 +27,13 @@ export class IListTopFarmResponseDto {
   name: string;
 
   @ApiProperty({
+    description: 'Estado da fazenda',
+    example: 'SP',
+  })
+  @IsString()
+  state: string;
+
+  @ApiProperty({
     description: 'Produção total da fazenda em toneladas',
     example: 15000.25,
   })

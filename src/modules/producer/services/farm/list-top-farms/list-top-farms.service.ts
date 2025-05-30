@@ -3,6 +3,7 @@ import { IFarmRepository } from '../../../repositories/farm/farm.interface';
 import { IListTopFarmsService } from './list-top-farms.interface';
 import { Farm } from '../../../../../database/entities/farm.entity';
 import { IListTopFarmResponseDto } from '../../../dtos/farm/list-top-farms.response.dto';
+import { IListTopFarmsRequestDto } from '../../../dtos/farm/list-top-farms.request.dto';
 
 @Injectable()
 export class ListTopFarmsService implements IListTopFarmsService {
@@ -13,9 +14,11 @@ export class ListTopFarmsService implements IListTopFarmsService {
     private readonly farmRepository: IFarmRepository,
   ) {}
 
-  async perform(): Promise<IListTopFarmResponseDto[]> {
+  async perform(
+    filters?: IListTopFarmsRequestDto,
+  ): Promise<IListTopFarmResponseDto[]> {
     this.logger.log('Buscando as 3 maiores fazendas por produção real');
-    const farms = await this.farmRepository.findTopFarmsByProduction();
+    const farms = await this.farmRepository.findTopFarmsByProduction(filters);
 
     return farms.map((farm) => this.mapFarmToResponse(farm));
   }
@@ -28,6 +31,7 @@ export class ListTopFarmsService implements IListTopFarmsService {
     return {
       id: farm.id,
       name: farm.name,
+      state: farm.address.state,
       totalProduction,
       producer: {
         name: farm.producer.name,
