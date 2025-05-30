@@ -12,4 +12,17 @@ export class FarmRepository
   constructor(dataSource: DataSource) {
     super(dataSource, Farm);
   }
+
+  async findTopFarmsByProduction(): Promise<Farm[]> {
+    return this.repository
+      .createQueryBuilder('farm')
+      .leftJoinAndSelect('farm.producer', 'producer')
+      .leftJoinAndSelect('farm.harvests', 'harvest')
+      .select('farm')
+      .addSelect('producer')
+      .addSelect('harvest')
+      .orderBy('harvest.actualProduction', 'DESC')
+      .take(3)
+      .getMany();
+  }
 }

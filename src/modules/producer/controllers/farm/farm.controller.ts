@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Inject } from '@nestjs/common';
+import { Controller, Post, Body, Inject, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Farm } from '../../../../database/entities/farm.entity';
 import { IRegisterFarmRequestDto } from '../../dtos/farm/register.request.dto';
 import { IRegisterFarmService } from '../../services/farm/register/register.interface';
+import { IListTopFarmsService } from '../../services/farm/list-top-farms/list-top-farms.interface';
+import { IListTopFarmResponseDto } from '../../dtos/farm/list-top-farms.response.dto';
 
 @ApiTags('Produtor e Propriedade Rural')
 @Controller('farm')
@@ -10,6 +12,9 @@ export class FarmController {
   constructor(
     @Inject('IRegisterFarmService')
     private readonly registerFarmService: IRegisterFarmService,
+
+    @Inject('IListTopFarmsService')
+    private readonly listTopFarmsService: IListTopFarmsService,
   ) {}
 
   @Post()
@@ -26,5 +31,18 @@ export class FarmController {
   })
   async create(@Body() farmData: IRegisterFarmRequestDto): Promise<Farm> {
     return this.registerFarmService.perform(farmData);
+  }
+
+  @Get('top')
+  @ApiOperation({
+    summary: 'Listar as 3 maiores fazendas por produção real',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista das 3 maiores fazendas retornada com sucesso.',
+    type: [IListTopFarmResponseDto],
+  })
+  async getTopFarms(): Promise<IListTopFarmResponseDto[]> {
+    return await this.listTopFarmsService.perform();
   }
 }

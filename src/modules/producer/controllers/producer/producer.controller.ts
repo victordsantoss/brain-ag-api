@@ -51,7 +51,7 @@ export class ProducerController {
     private readonly getProducerService: IGetProducerService,
 
     @Inject('IListTopProducersService')
-    private readonly topProducersService: IListTopProducersService,
+    private readonly listTopProducersService: IListTopProducersService,
   ) {}
 
   @Post()
@@ -97,7 +97,7 @@ export class ProducerController {
     type: [ITopProducerResponseDto],
   })
   async getTopProducers(): Promise<ITopProducerResponseDto[]> {
-    return await this.topProducersService.perform();
+    return await this.listTopProducersService.perform();
   }
 
   @Get(':id')
