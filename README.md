@@ -15,6 +15,28 @@ Este projeto é uma API baseada em NestJS para gerenciamento de produtores agrí
 - Funcionalidade de exclusão suave (soft delete)
 - Paginação e filtros para operações de listagem por query params
 
+## Qualidade e Integração Contínua
+
+### Validação de Commits
+
+O projeto utiliza o Husky para garantir a qualidade do código antes de cada commit. As seguintes validações são executadas automaticamente:
+
+- **Testes Unitários**: Execução de todos os testes unitários
+- **Linting**: Verificação de padrões de código com ESLint
+- **Formatação**: Validação da formatação do código com Prettier
+
+### Integração Contínua (CI)
+
+O projeto utiliza GitHub Actions para executar um pipeline de CI em cada push e pull request na branch `main`. O pipeline inclui:
+
+- **Testes e Validações**:
+  - Verificação de formatação do código
+  - Execução do linter
+  - Execução dos testes unitários
+  - Build da aplicação
+
+O pipeline garante que apenas código que passa em todas as validações seja mesclado na branch principal.
+
 ## Arquitetura
 
 ### Princípios Arquiteturais
