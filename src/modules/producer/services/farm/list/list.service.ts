@@ -1,4 +1,9 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  Logger,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { IFarmRepository } from '../../../repositories/farm/farm.interface';
 import { IListFarmsService } from './list.interface';
 import { IListFarmsRequestDto } from '../../../dtos/farm/list.request.dto';
@@ -19,22 +24,38 @@ export class ListFarmsService implements IListFarmsService {
     query: IListFarmsRequestDto,
   ): Promise<BasePaginationResponseDto<IFarmsResponseDto>> {
     this.logger.log('Buscando fazendas com paginação e filtros');
-    const [farms, total] = await this.farmRepository.findByFilters(query);
+    try {
+      const defaultQuery: IListFarmsRequestDto = {
+        page: 1,
+        limit: 10,
+        orderBy: 'name',
+        sortBy: 'ASC',
+        ...query,
+      };
 
-    const totalPages = Math.ceil(total / query.limit);
-    const currentPage = query.page;
+      const [farms, total] =
+        await this.farmRepository.findByFilters(defaultQuery);
+      const totalPages = Math.ceil(total / defaultQuery.limit);
+      const currentPage = defaultQuery.page;
 
-    return {
-      data: farms.map((farm) => this.mapFarmToResponse(farm)),
-      meta: {
-        total,
-        page: currentPage,
-        limit: query.limit,
-        totalPages,
-      },
-    };
+      return {
+        data: farms.map((farm) => this.mapFarmToResponse(farm)),
+        meta: {
+          total,
+          page: currentPage,
+          limit: defaultQuery.limit,
+          totalPages,
+        },
+      };
+    } catch (error) {
+      throw (
+        error ?? new InternalServerErrorException(`Erro ao buscar fazendas`)
+      );
+    }
   }
+
   private mapFarmToResponse(farm: Farm): IFarmsResponseDto {
+    this.logger.log('Mapeando resposta para o cliente');
     return {
       id: farm.id,
       name: farm.name,
@@ -42,6 +63,7 @@ export class ListFarmsService implements IListFarmsService {
       cultivatedArea: farm.cultivatedArea,
       vegetationArea: farm.vegetationArea,
       status: farm.status,
+      cultures: farm.harvests.map((harvest) => harvest.culture.name),
       producer: {
         name: farm.producer.name,
       },

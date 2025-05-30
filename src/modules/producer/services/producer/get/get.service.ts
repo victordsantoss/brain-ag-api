@@ -39,6 +39,7 @@ export class GetProducerService implements IGetProducerService {
   }
 
   private mapProducerToResponse(producer: Producer): IGetProducerResponseDto {
+    this.logger.log('Mapeando resposta para o cliente');
     return {
       id: producer.id,
       name: producer.name,

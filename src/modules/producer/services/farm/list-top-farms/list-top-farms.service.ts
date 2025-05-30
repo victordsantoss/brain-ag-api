@@ -1,4 +1,9 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  Logger,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { IFarmRepository } from '../../../repositories/farm/farm.interface';
 import { IListTopFarmsService } from './list-top-farms.interface';
 import { Farm } from '../../../../../database/entities/farm.entity';
@@ -17,13 +22,22 @@ export class ListTopFarmsService implements IListTopFarmsService {
   async perform(
     filters?: IListTopFarmsRequestDto,
   ): Promise<IListTopFarmResponseDto[]> {
-    this.logger.log('Buscando as 3 maiores fazendas por produção real');
-    const farms = await this.farmRepository.findTopFarmsByProduction(filters);
-
-    return farms.map((farm) => this.mapFarmToResponse(farm));
+    this.logger.log(
+      'Buscando as 3 maiores propriedades rurais por produção real',
+    );
+    try {
+      const farms = await this.farmRepository.findTopFarmsByProduction(filters);
+      return farms.map((farm) => this.mapFarmToResponse(farm));
+    } catch (error) {
+      throw (
+        error ??
+        new InternalServerErrorException(`Erro ao buscar propriedades rurais`)
+      );
+    }
   }
 
   private mapFarmToResponse(farm: Farm): IListTopFarmResponseDto {
+    this.logger.log('Mapeando resposta para o cliente');
     const totalProduction = farm.harvests.reduce((total, harvest) => {
       return total + (Number(harvest.actualProduction) || 0);
     }, 0);

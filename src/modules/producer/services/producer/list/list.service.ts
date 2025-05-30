@@ -46,6 +46,7 @@ export class ListProducersService {
   }
 
   private mapToResponse(producer: Producer): IProducersResponseDto {
+    this.logger.log('Mapeando resposta para o cliente');
     return {
       id: producer.id,
       name: producer.name,

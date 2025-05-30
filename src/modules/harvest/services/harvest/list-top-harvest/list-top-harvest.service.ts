@@ -27,6 +27,7 @@ export class ListTopHarvestService implements IListTopHarvestService {
   }
 
   private mapHarvestToResponse(harvest: Harvest): IListTopHarvestResponseDto {
+    this.logger.log('Mapeando resposta para o cliente');
     return {
       id: harvest.culture.id,
       name: harvest.culture.name,

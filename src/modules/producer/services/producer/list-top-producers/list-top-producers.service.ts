@@ -34,6 +34,7 @@ export class ListTopProducersService implements IListTopProducersService {
   private mapProducerToResponse(
     producer: Producer,
   ): IListTopProducersResponseDto {
+    this.logger.log('Mapeando resposta para o cliente');
     const totalProduction = producer.farms.reduce((total, farm) => {
       const farmProduction = farm.harvests.reduce((farmTotal, harvest) => {
         return farmTotal + (Number(harvest.actualProduction) || 0);

@@ -61,18 +61,37 @@ export class FarmRepository
       orderBy = 'name',
       sortBy = 'ASC',
       search,
+      producerId,
+      state,
+      cultureName,
     } = filters;
 
     const queryBuilder = this.repository
       .createQueryBuilder('farm')
       .leftJoinAndSelect('farm.producer', 'producer')
-      .leftJoinAndSelect('farm.address', 'address');
+      .leftJoinAndSelect('farm.address', 'address')
+      .leftJoinAndSelect('farm.harvests', 'harvest')
+      .leftJoinAndSelect('harvest.culture', 'culture');
 
     if (search) {
       queryBuilder.where(
         '(LOWER(farm.name) LIKE LOWER(:search) OR LOWER(producer.name) LIKE LOWER(:search))',
         { search: `%${search}%` },
       );
+    }
+
+    if (producerId) {
+      queryBuilder.andWhere('producer.id = :producerId', { producerId });
+    }
+
+    if (state) {
+      queryBuilder.andWhere('LOWER(address.state) = LOWER(:state)', { state });
+    }
+
+    if (cultureName) {
+      queryBuilder.andWhere('LOWER(culture.name) = LOWER(:cultureName)', {
+        cultureName,
+      });
     }
 
     queryBuilder

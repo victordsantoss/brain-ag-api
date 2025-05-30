@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsString,
   ValidateNested,
+  IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { BaseEntityStatus } from '../../../../common/enums/status.enum';
@@ -115,6 +116,13 @@ export class IFarmsResponseDto extends PartialType(IBaseProducerRequestDto) {
   })
   @IsEnum(BaseEntityStatus)
   status: BaseEntityStatus;
+
+  @ApiProperty({
+    description: 'Culturas da fazenda',
+    example: ['Soja', 'Milho', 'Café'],
+  })
+  @IsArray()
+  cultures: string[];
 
   @ApiProperty({
     description: 'Produtor da fazenda',
