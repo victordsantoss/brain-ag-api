@@ -164,7 +164,7 @@ erDiagram
 - `POST /harvest` - Registrar nova safra em uma propriedade rural vinculada a uma cultura
 - `GET /harvest/top` - Listar as 3 maiores safras com base na produção real por ano, cultura ou estado
 
-## Validação de Dados
+### Validação de Dados
 
 - Validação de CPF
 - Validação de área (cultivada + vegetação ≤ total)
@@ -172,13 +172,21 @@ erDiagram
 - Validação de campos obrigatórios
 - Aplicação de restrições únicas
 
-## Tratamento de Erros
+### Tratamento de Erros
 
 - Filtros de exceção personalizados
 - Pipes de validação
 - Tratamento global de erros
 - Códigos de status HTTP apropriados
 - Mensagens de erro detalhadas
+
+
+## ScreenShoots 
+- Documentação dos Endpoints (Swagger)
+<img width="1103" alt="Captura de Tela 2025-05-30 às 19 48 57" src="https://github.com/user-attachments/assets/0526d739-939d-4442-970c-65178d09bf44" />
+
+- Cobertura de Testes Unitários
+![Captura de Tela 2025-05-30 às 19 49 29](https://github.com/user-attachments/assets/d1b2feaf-b322-4939-9d32-d4e890e50215)
 
 ## Como Executar o Projeto
 
