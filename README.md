@@ -13,7 +13,107 @@ Este projeto é uma API baseada em NestJS para gerenciamento de produtores agrí
 - Análise de produtores e fazendas mais produtivas
 - Gestão de endereços das fazendas
 - Funcionalidade de exclusão suave (soft delete)
-- Paginação e filtros para operações de listagem
+- Paginação e filtros para operações de listagem por query params
+
+## Arquitetura
+
+### Princípios Arquiteturais
+
+O projeto foi desenvolvido como um monolito modular seguindo os princípios SOLID, garantindo um código limpo, testável e de fácil manutenção:
+
+- **Single Responsibility Principle (SRP)**: Cada serviço possui uma única responsabilidade bem definida. Por exemplo:
+
+  - `ListProducerService`: Responsável apenas pela listagem de produtores
+  - `CreateProducerService`: Responsável apenas pela criação de produtores
+  - `ListTopHarvestService`: Responsável apenas pela listagem das maiores colheitas
+
+- **Open/Closed Principle (OCP)**: O sistema é aberto para extensão, mas fechado para modificação. Isso é alcançado através de:
+
+  - Uso de interfaces para definir contratos
+  - Injeção de dependências para permitir extensões
+  - Estratégias de validação e filtros extensíveis
+
+- **Liskov Substitution Principle (LSP)**: As implementações concretas são substituíveis por suas interfaces. Por exemplo:
+
+  - `IProducerRepository` pode ser implementado por diferentes tipos de repositórios
+  - `IListProducerService` pode ter diferentes implementações mantendo o mesmo contrato
+
+- **Interface Segregation Principle (ISP)**: Interfaces são específicas para cada cliente. Por exemplo:
+
+  - Interfaces de repositório separadas por entidade
+  - DTOs específicos para cada operação
+  - Serviços com interfaces focadas em suas responsabilidades
+
+- **Dependency Inversion Principle (DIP)**: Módulos de alto nível não dependem de módulos de baixo nível. Ambos dependem de abstrações:
+  - Serviços dependem de interfaces de repositório
+  - Controladores dependem de interfaces de serviço
+  - Uso de injeção de dependência para resolver implementações
+
+### Benefícios da Arquitetura
+
+- **Modularidade**: Cada módulo (producer, harvest) é independente e pode ser desenvolvido, testado e mantido separadamente
+- **Testabilidade**: A separação de responsabilidades e uso de interfaces facilita a escrita de testes unitários
+- **Manutenibilidade**: Código organizado e coeso facilita a manutenção e evolução do sistema
+- **Escalabilidade**: A arquitetura permite adicionar novos módulos sem afetar os existentes
+- **Reusabilidade**: Componentes comuns são compartilhados através do diretório `common`
+
+### Estrutura de Diretórios
+
+```
+src/
+├── common/                   # Código compartilhado entre módulos
+│   ├── configs/              # Configurações comuns para aplicação
+│   ├── dtos/                 # DTOs compartilhados
+│   ├── enums/                # Enums compartilhados
+│   ├── filters/              # Filtros de exceção
+│   ├── guards/               # Guards de autenticação/autorização
+│   ├── repositories/         # Repositório comum para entidades
+│   └── utils/                # Formatadores e Validadores comuns
+│
+├── database/                 # Configuração e entidades do banco de dados
+│   ├── entities/             # Entidades do TypeORM
+│
+├── integrations/             # Integrações com serviços externos
+│   └── viacep/               # Integração com API ViaCEP
+│
+├── modules/                 # Módulos da aplicação
+│   ├── producer/            # Módulo de produtores
+│   │   ├── controllers/     # Controladores
+│   │   ├── dtos/            # DTOs específicos
+│   │   ├── providers/       # Exportador de serviços e repositories
+│   │   ├── repositories/    # Interfaces de conexão com o banco de dados via ORM
+│   │   └── services/        # Serviços
+│   │
+│   └── harvest/            # Módulo de colheitas
+│   │   ├── controllers/     # Controladores
+│   │   ├── dtos/            # DTOs específicos
+│   │   ├── providers/       # Exportador de serviços e repositories
+│   │   ├── repositories/    # Interfaces de conexão com o banco de dados via ORM
+│   │   └── services/        # Serviços
+│
+├── app.module.ts            # Módulo principal da aplicação
+└── main.ts                  # Ponto de entrada da aplicação
+```
+
+### Descrição dos Diretórios
+
+- **common/**: Contém código compartilhado entre diferentes módulos da aplicação, incluindo decoradores, DTOs, filtros, guards, interfaces, pipes e utilitários.
+
+- **database/**: Responsável pela configuração e gerenciamento do banco de dados, contendo entidades, migrações e implementações dos repositórios.
+
+- **integrations/**: Módulos de integração com serviços externos, como a API ViaCEP para consulta de endereços.
+
+- **modules/**: Módulos principais da aplicação, cada um seguindo a arquitetura em camadas:
+  - **producer/**: Módulo responsável pela gestão de produtores
+  - **harvest/**: Módulo responsável pela gestão de colheitas
+
+Cada módulo segue uma estrutura interna consistente:
+
+- **controllers/**: Controladores que gerenciam as requisições HTTP
+- **dtos/**: Objetos de transferência de dados específicos do módulo
+- **providers/**: Objetos para abstração do retorno de services e repositories
+- **repositories/**: Objetos responsáveis por abstrair a conexão com banco de dados retirando a responsabilidade do serviço
+- **services/**: Lógica de negócio e regras da aplicação
 
 ## Modelagem do Banco de Dados
 
@@ -180,13 +280,13 @@ erDiagram
 - Códigos de status HTTP apropriados
 - Mensagens de erro detalhadas
 
+## ScreenShoots
 
-## ScreenShoots 
 - Documentação dos Endpoints (Swagger)
-<img width="1103" alt="Captura de Tela 2025-05-30 às 19 48 57" src="https://github.com/user-attachments/assets/0526d739-939d-4442-970c-65178d09bf44" />
+  <img width="1103" alt="Captura de Tela 2025-05-30 às 19 48 57" src="https://github.com/user-attachments/assets/0526d739-939d-4442-970c-65178d09bf44" />
 
 - Cobertura de Testes Unitários
-![Captura de Tela 2025-05-30 às 19 49 29](https://github.com/user-attachments/assets/d1b2feaf-b322-4939-9d32-d4e890e50215)
+  ![Captura de Tela 2025-05-30 às 19 49 29](https://github.com/user-attachments/assets/d1b2feaf-b322-4939-9d32-d4e890e50215)
 
 ## Como Executar o Projeto
 
@@ -246,5 +346,5 @@ npm run test:cov
 Após iniciar o servidor, a documentação Swagger estará disponível em:
 
 ```
-http://localhost:3000/api
+http://localhost:3000/docs
 ```
