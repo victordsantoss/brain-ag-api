@@ -8,13 +8,27 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class ITopProducerFarmResponseDto {
+export class IListTopProducerFarmResponseDto {
   @ApiProperty({
     description: 'Nome da fazenda',
     example: 'Fazenda São João',
   })
   @IsString()
   name: string;
+
+  @ApiProperty({
+    description: 'Estado da fazenda',
+    example: 'SP',
+  })
+  @IsString()
+  state: string;
+
+  @ApiProperty({
+    description: 'Culturas da fazenda',
+    example: ['Soja', 'Milho', 'Café'],
+  })
+  @IsArray()
+  cultures: string[];
 
   @ApiProperty({
     description: 'Produção total da fazenda em toneladas',
@@ -24,7 +38,7 @@ export class ITopProducerFarmResponseDto {
   production: number;
 }
 
-export class ITopProducerResponseDto {
+export class IListTopProducersResponseDto {
   @ApiProperty({
     description: 'ID do produtor',
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -48,10 +62,10 @@ export class ITopProducerResponseDto {
 
   @ApiProperty({
     description: 'Lista de fazendas do produtor',
-    type: [ITopProducerFarmResponseDto],
+    type: [IListTopProducerFarmResponseDto],
   })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ITopProducerFarmResponseDto)
-  farms: ITopProducerFarmResponseDto[];
+  @Type(() => IListTopProducerFarmResponseDto)
+  farms: IListTopProducerFarmResponseDto[];
 }

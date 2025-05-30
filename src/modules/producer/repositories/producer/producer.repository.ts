@@ -54,9 +54,13 @@ export class ProducerRepository
       .createQueryBuilder('producer')
       .leftJoinAndSelect('producer.farms', 'farm')
       .leftJoinAndSelect('farm.harvests', 'harvest')
+      .leftJoinAndSelect('farm.address', 'address')
+      .leftJoinAndSelect('harvest.culture', 'culture')
       .select('producer')
       .addSelect('farm')
       .addSelect('harvest')
+      .addSelect('address')
+      .addSelect('culture')
       .orderBy('harvest.actualProduction', 'DESC')
       .take(3)
       .getMany();
