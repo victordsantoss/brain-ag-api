@@ -43,7 +43,7 @@ export class FarmController {
     description: 'Lista das 3 maiores fazendas retornada com sucesso.',
     type: [IListTopFarmResponseDto],
   })
-  async getTopFarms(
+  async listTopFarms(
     @Query() filters?: IListTopFarmsRequestDto,
   ): Promise<IListTopFarmResponseDto[]> {
     return await this.listTopFarmsService.perform(filters);

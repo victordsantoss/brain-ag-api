@@ -96,7 +96,7 @@ export class ProducerController {
     description: 'Lista dos 3 maiores produtores retornada com sucesso.',
     type: [ITopProducerResponseDto],
   })
-  async getTopProducers(): Promise<ITopProducerResponseDto[]> {
+  async listTopProducers(): Promise<ITopProducerResponseDto[]> {
     return await this.listTopProducersService.perform();
   }
 

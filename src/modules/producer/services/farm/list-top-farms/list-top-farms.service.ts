@@ -33,9 +33,7 @@ export class ListTopFarmsService implements IListTopFarmsService {
       name: farm.name,
       state: farm.address.state,
       totalProduction,
-      producer: {
-        name: farm.producer.name,
-      },
+      producerName: farm.producer.name,
     };
   }
 }

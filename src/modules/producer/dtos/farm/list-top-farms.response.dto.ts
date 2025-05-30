@@ -1,15 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsUUID, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
-
-export class IListTopFarmProducerResponseDto {
-  @ApiProperty({
-    description: 'Nome do produtor',
-    example: 'João Silva',
-  })
-  @IsString()
-  name: string;
-}
+import { IsString, IsNumber, IsUUID } from 'class-validator';
 
 export class IListTopFarmResponseDto {
   @ApiProperty({
@@ -42,9 +32,7 @@ export class IListTopFarmResponseDto {
 
   @ApiProperty({
     description: 'Produtor da fazenda',
-    type: IListTopFarmProducerResponseDto,
   })
-  @ValidateNested()
-  @Type(() => IListTopFarmProducerResponseDto)
-  producer: IListTopFarmProducerResponseDto;
+  @IsString()
+  producerName: string;
 }
