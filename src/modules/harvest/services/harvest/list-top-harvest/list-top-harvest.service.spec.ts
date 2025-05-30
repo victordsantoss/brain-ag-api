@@ -95,7 +95,7 @@ describe('ListTopHarvestService', () => {
       );
     });
 
-    it('should return top harvests without filters', async () => {
+    it('should return top harvests with only year filter', async () => {
       const filters = {
         year: 2024,
       };
