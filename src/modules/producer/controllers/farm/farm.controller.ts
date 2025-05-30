@@ -37,7 +37,7 @@ export class FarmController {
   @Get('top')
   @ApiOperation({
     summary:
-      'Listar as 3 maiores fazendas por produção real por cultura ou estado',
+      'Listar as 3 maiores fazendas com base na produção real, por ano, cultura ou estado',
   })
   @ApiResponse({
     status: 200,

@@ -35,6 +35,10 @@ export class FarmRepository
       });
     }
 
+    if (filters?.year) {
+      queryBuilder.andWhere('harvest.year = :year', { year: filters.year });
+    }
+
     if (filters?.cultureName) {
       queryBuilder.andWhere('LOWER(culture.name) = LOWER(:cultureName)', {
         cultureName: filters.cultureName,

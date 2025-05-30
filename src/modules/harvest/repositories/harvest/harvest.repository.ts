@@ -29,10 +29,26 @@ export class HarvestRepository
       .leftJoinAndSelect('harvest.culture', 'culture')
       .leftJoinAndSelect('harvest.farm', 'farm')
       .leftJoinAndSelect('farm.producer', 'producer')
-      .where('harvest.year = :year', { year: filters.year })
+      .leftJoinAndSelect('farm.address', 'address')
       .andWhere('harvest.actualProduction IS NOT NULL')
       .orderBy('harvest.actualProduction', 'DESC')
       .take(3);
+
+    if (filters.year) {
+      queryBuilder.andWhere('harvest.year = :year', { year: filters.year });
+    }
+
+    if (filters.cultureName) {
+      queryBuilder.andWhere('LOWER(culture.name) = LOWER(:cultureName)', {
+        cultureName: filters.cultureName,
+      });
+    }
+
+    if (filters.state) {
+      queryBuilder.andWhere('LOWER(address.state) = LOWER(:state)', {
+        state: filters.state,
+      });
+    }
 
     return queryBuilder.getMany();
   }

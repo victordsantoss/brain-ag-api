@@ -17,7 +17,9 @@ export class ListTopHarvestService implements IListTopHarvestService {
   async perform(
     filters: IListTopHarvestRequestDto,
   ): Promise<IListTopHarvestResponseDto[]> {
-    this.logger.log(`Buscando as 3 maiores culturas do ano ${filters.year}`);
+    this.logger.log(
+      `Buscando as 3 maiores safras com base na produção real, por ano, cultura ou estado`,
+    );
     const harvests =
       await this.harvestRepository.findTopHarvestsByYear(filters);
 

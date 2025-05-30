@@ -40,7 +40,8 @@ export class HarvestController {
 
   @Get('top')
   @ApiOperation({
-    summary: 'Listar as 3 maiores safras por produção real em um ano',
+    summary:
+      'Listar as 3 maiores safras com base na produção real por ano, cultura ou estado',
   })
   @ApiResponse({
     status: 200,

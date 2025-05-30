@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, Length } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Length } from 'class-validator';
 
 export class IListTopFarmsRequestDto {
   @ApiProperty({
@@ -20,4 +20,13 @@ export class IListTopFarmsRequestDto {
   @IsOptional()
   @IsString()
   cultureName?: string;
+
+  @ApiProperty({
+    description: 'Ano para filtrar as fazendas',
+    example: 2024,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  year?: number;
 }
