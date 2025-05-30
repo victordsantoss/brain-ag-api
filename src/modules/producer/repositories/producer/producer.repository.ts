@@ -48,4 +48,17 @@ export class ProducerRepository
 
     return queryBuilder.getManyAndCount();
   }
+
+  async findTopProducersByProduction(): Promise<Producer[]> {
+    return this.repository
+      .createQueryBuilder('producer')
+      .leftJoinAndSelect('producer.farms', 'farm')
+      .leftJoinAndSelect('farm.harvests', 'harvest')
+      .select('producer')
+      .addSelect('farm')
+      .addSelect('harvest')
+      .orderBy('harvest.actualProduction', 'DESC')
+      .take(3)
+      .getMany();
+  }
 }

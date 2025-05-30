@@ -28,6 +28,8 @@ import {
 } from '../../dtos/producer/list.response.dto';
 import { IGetProducerService } from '../../services/producer/get/get.interface';
 import { IGetProducerResponseDto } from '../../dtos/producer/get.response.dto';
+import { IListTopProducersService } from '../../services/producer/list-top-producers/list-top-producers.interface';
+import { ITopProducerResponseDto } from '../../dtos/producer/list-top-producers.response.dto';
 
 @ApiTags('Produtor e Propriedade Rural')
 @Controller('producer')
@@ -47,6 +49,9 @@ export class ProducerController {
 
     @Inject('IGetProducerService')
     private readonly getProducerService: IGetProducerService,
+
+    @Inject('IListTopProducersService')
+    private readonly topProducersService: IListTopProducersService,
   ) {}
 
   @Post()
@@ -80,6 +85,19 @@ export class ProducerController {
     @Query() query: IListProducersRequestDto,
   ): Promise<BasePaginationResponseDto<IProducersResponseDto>> {
     return await this.listProducersService.perform(query);
+  }
+
+  @Get('top')
+  @ApiOperation({
+    summary: 'Listar os 3 maiores produtores por produção real',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista dos 3 maiores produtores retornada com sucesso.',
+    type: [ITopProducerResponseDto],
+  })
+  async getTopProducers(): Promise<ITopProducerResponseDto[]> {
+    return await this.topProducersService.perform();
   }
 
   @Get(':id')

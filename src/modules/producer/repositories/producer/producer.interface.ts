@@ -15,4 +15,6 @@ export interface IProducerRepository
   ): Promise<[Producer[], number]>;
 
   findByIdWithFarms(id: string): Promise<Producer>;
+
+  findTopProducersByProduction(): Promise<Producer[]>;
 }
