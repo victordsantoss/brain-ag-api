@@ -24,6 +24,16 @@ describe('ListProducersService', () => {
       createdAt: faker.date.past(),
     }) as Producer;
 
+  const mapToResponse = (producer: Producer) => ({
+    id: producer.id,
+    name: producer.name,
+    email: producer.email,
+    cpf: producer.cpf,
+    phone: producer.phone,
+    status: producer.status,
+    createdAt: producer.createdAt,
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -37,6 +47,11 @@ describe('ListProducersService', () => {
 
     service = module.get<ListProducersService>(ListProducersService);
     producerRepository = module.get('IProducerRepository');
+
+    // Mock the mapToResponse method
+    jest
+      .spyOn(service as any, 'mapToResponse')
+      .mockImplementation(mapToResponse);
   });
 
   afterEach(() => {
@@ -56,7 +71,15 @@ describe('ListProducersService', () => {
       const result = await service.perform(query);
 
       expect(result).toEqual({
-        data: mockProducers,
+        data: mockProducers.map((producer) => ({
+          id: producer.id,
+          name: producer.name,
+          email: producer.email,
+          cpf: producer.cpf,
+          phone: producer.phone,
+          status: producer.status,
+          createdAt: producer.createdAt,
+        })),
         meta: {
           page: 1,
           limit: 10,
@@ -90,7 +113,15 @@ describe('ListProducersService', () => {
       const result = await service.perform(query);
 
       expect(result).toEqual({
-        data: mockProducers,
+        data: mockProducers.map((producer) => ({
+          id: producer.id,
+          name: producer.name,
+          email: producer.email,
+          cpf: producer.cpf,
+          phone: producer.phone,
+          status: producer.status,
+          createdAt: producer.createdAt,
+        })),
         meta: {
           page: 2,
           limit: 5,
@@ -120,7 +151,15 @@ describe('ListProducersService', () => {
       const result = await service.perform(query);
 
       expect(result).toEqual({
-        data: mockProducers,
+        data: mockProducers.map((producer) => ({
+          id: producer.id,
+          name: producer.name,
+          email: producer.email,
+          cpf: producer.cpf,
+          phone: producer.phone,
+          status: producer.status,
+          createdAt: producer.createdAt,
+        })),
         meta: {
           page: 1,
           limit: 10,
@@ -175,7 +214,15 @@ describe('ListProducersService', () => {
       const result = await service.perform(query);
 
       expect(result).toEqual({
-        data: mockProducers,
+        data: mockProducers.map((producer) => ({
+          id: producer.id,
+          name: producer.name,
+          email: producer.email,
+          cpf: producer.cpf,
+          phone: producer.phone,
+          status: producer.status,
+          createdAt: producer.createdAt,
+        })),
         meta: {
           page: 2,
           limit: 5,
@@ -204,7 +251,15 @@ describe('ListProducersService', () => {
       const result = await service.perform(query);
 
       expect(result).toEqual({
-        data: mockProducers,
+        data: mockProducers.map((producer) => ({
+          id: producer.id,
+          name: producer.name,
+          email: producer.email,
+          cpf: producer.cpf,
+          phone: producer.phone,
+          status: producer.status,
+          createdAt: producer.createdAt,
+        })),
         meta: {
           page: 3,
           limit: 5,

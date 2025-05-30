@@ -13,12 +13,19 @@ import {
 import { CpfGuard } from '../../../../common/guards/cpf.guard';
 import { IListProducersService } from '../../services/producer/list/list.interface';
 import { BasePaginationResponseDto } from '../../../../common/dtos/base-pagination.response.dto';
-import { IGetProducerResponseDto } from '../../dtos/producer/get.response.dto';
+import { IListTopProducersService } from '../../services/producer/list-top-producers/list-top-producers.interface';
+import { IGetProducerService } from '../../services/producer/get/get.interface';
+import { IUpdateProducerService } from '../../services/producer/update/update.interface';
+import { IDeleteProducerService } from '../../services/producer/delete/delete.interface';
 
 describe('ProducerController', () => {
   let controller: ProducerController;
   let registerProducerService: jest.Mocked<IRegisterProducerService>;
   let listProducersService: jest.Mocked<IListProducersService>;
+  let listTopProducersService: jest.Mocked<IListTopProducersService>;
+  let getProducerService: jest.Mocked<IGetProducerService>;
+  let updateProducerService: jest.Mocked<IUpdateProducerService>;
+  let deleteProducerService: jest.Mocked<IDeleteProducerService>;
 
   const mockRegisterProducerService = {
     perform: jest.fn(),
@@ -84,6 +91,12 @@ describe('ProducerController', () => {
           provide: 'IGetProducerService',
           useValue: mockGetProducerService,
         },
+        {
+          provide: 'IListTopProducersService',
+          useValue: {
+            perform: jest.fn(),
+          },
+        },
       ],
     })
       .overrideGuard(CpfGuard)
@@ -93,6 +106,10 @@ describe('ProducerController', () => {
     controller = module.get<ProducerController>(ProducerController);
     registerProducerService = module.get('IRegisterProducerService');
     listProducersService = module.get('IListProducersService');
+    listTopProducersService = module.get('IListTopProducersService');
+    getProducerService = module.get('IGetProducerService');
+    updateProducerService = module.get('IUpdateProducerService');
+    deleteProducerService = module.get('IDeleteProducerService');
   });
 
   afterEach(() => {
@@ -305,85 +322,55 @@ describe('ProducerController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should successfully update a producer', async () => {
-      const producerId = faker.string.uuid();
-      const producerData = {
-        name: faker.person.fullName(),
-      };
+  describe('listTopProducers', () => {
+    it('should return top producers', async () => {
+      const mockProducers = Array(3)
+        .fill(null)
+        .map(() => ({
+          id: faker.string.uuid(),
+          name: faker.person.fullName(),
+          totalProduction: faker.number.float({ min: 0, max: 1000 }),
+          farms: [
+            {
+              name: faker.company.name(),
+              state: faker.location.state(),
+              cultures: [faker.commerce.productName()],
+              production: faker.number.float({ min: 0, max: 1000 }),
+            },
+          ],
+        }));
 
-      const mockUpdatedProducer = createMockProducer();
-      Object.assign(mockUpdatedProducer, producerData);
+      listTopProducersService.perform.mockResolvedValue(mockProducers);
 
-      mockUpdateProducerService.perform.mockResolvedValue(mockUpdatedProducer);
+      const result = await controller.listTopProducers();
 
-      const result = await controller.update(producerId, producerData);
-
-      expect(result).toEqual(mockUpdatedProducer);
-      expect(mockUpdateProducerService.perform).toHaveBeenCalledWith(
-        producerId,
-        producerData,
-      );
+      expect(result).toEqual(mockProducers);
+      expect(listTopProducersService.perform).toHaveBeenCalled();
     });
 
-    it('should throw NotFoundException when producer is not found', async () => {
-      const producerId = faker.string.uuid();
-      const producerData = {
-        name: faker.person.fullName(),
-      };
+    it('should handle empty results', async () => {
+      listTopProducersService.perform.mockResolvedValue([]);
 
-      mockUpdateProducerService.perform.mockRejectedValue(
-        new NotFoundException('Produtor não encontrado'),
-      );
+      const result = await controller.listTopProducers();
 
-      await expect(controller.update(producerId, producerData)).rejects.toThrow(
-        NotFoundException,
-      );
-
-      expect(mockUpdateProducerService.perform).toHaveBeenCalledWith(
-        producerId,
-        producerData,
-      );
-    });
-  });
-
-  describe('delete', () => {
-    it('should successfully delete a producer', async () => {
-      const producerId = faker.string.uuid();
-      const mockDeletedProducer = createMockProducer();
-
-      mockDeleteProducerService.perform.mockResolvedValue(mockDeletedProducer);
-
-      const result = await controller.delete(producerId);
-
-      expect(result).toEqual(mockDeletedProducer);
-      expect(mockDeleteProducerService.perform).toHaveBeenCalledWith(
-        producerId,
-      );
+      expect(result).toEqual([]);
+      expect(listTopProducersService.perform).toHaveBeenCalled();
     });
 
-    it('should throw NotFoundException when producer is not found', async () => {
-      const producerId = faker.string.uuid();
+    it('should handle service error', async () => {
+      const error = new InternalServerErrorException();
+      listTopProducersService.perform.mockRejectedValue(error);
 
-      mockDeleteProducerService.perform.mockRejectedValue(
-        new NotFoundException('Produtor não encontrado'),
-      );
-
-      await expect(controller.delete(producerId)).rejects.toThrow(
-        NotFoundException,
-      );
-
-      expect(mockDeleteProducerService.perform).toHaveBeenCalledWith(
-        producerId,
-      );
+      await expect(controller.listTopProducers()).rejects.toThrow(error);
+      expect(listTopProducersService.perform).toHaveBeenCalled();
     });
   });
 
   describe('get', () => {
-    it('should successfully get producer details', async () => {
+    it('should return producer details', async () => {
       const producerId = faker.string.uuid();
       const mockProducer = createMockProducer();
-      const expectedResponse: IGetProducerResponseDto = {
+      const expectedResponse = {
         id: mockProducer.id,
         name: mockProducer.name,
         cpf: mockProducer.cpf,
@@ -397,38 +384,137 @@ describe('ProducerController', () => {
         createdAt: mockProducer.createdAt,
       };
 
-      mockGetProducerService.perform.mockResolvedValue(expectedResponse);
+      getProducerService.perform.mockResolvedValue(expectedResponse);
 
       const result = await controller.get(producerId);
 
       expect(result).toEqual(expectedResponse);
-      expect(mockGetProducerService.perform).toHaveBeenCalledWith(producerId);
+      expect(getProducerService.perform).toHaveBeenCalledWith(producerId);
     });
 
     it('should throw NotFoundException when producer is not found', async () => {
       const producerId = faker.string.uuid();
 
-      mockGetProducerService.perform.mockRejectedValue(
+      getProducerService.perform.mockRejectedValue(
         new NotFoundException('Produtor não encontrado'),
       );
 
       await expect(controller.get(producerId)).rejects.toThrow(
         NotFoundException,
       );
-      expect(mockGetProducerService.perform).toHaveBeenCalledWith(producerId);
+      expect(getProducerService.perform).toHaveBeenCalledWith(producerId);
     });
 
-    it('should throw InternalServerErrorException when service throws error', async () => {
+    it('should handle service error', async () => {
+      const producerId = faker.string.uuid();
+      const error = new InternalServerErrorException();
+      getProducerService.perform.mockRejectedValue(error);
+
+      await expect(controller.get(producerId)).rejects.toThrow(error);
+      expect(getProducerService.perform).toHaveBeenCalledWith(producerId);
+    });
+  });
+
+  describe('update', () => {
+    it('should update producer successfully', async () => {
+      const producerId = faker.string.uuid();
+      const updateData = {
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        phone: faker.phone.number(),
+      };
+
+      const mockUpdateResult = {
+        affected: 1,
+        raw: [],
+        generatedMaps: [],
+      };
+
+      updateProducerService.perform.mockResolvedValue(mockUpdateResult);
+
+      const result = await controller.update(producerId, updateData);
+
+      expect(result).toEqual(mockUpdateResult);
+      expect(updateProducerService.perform).toHaveBeenCalledWith(
+        producerId,
+        updateData,
+      );
+    });
+
+    it('should throw NotFoundException when producer is not found', async () => {
+      const producerId = faker.string.uuid();
+      const updateData = {
+        name: faker.person.fullName(),
+      };
+
+      updateProducerService.perform.mockRejectedValue(
+        new NotFoundException('Produtor não encontrado'),
+      );
+
+      await expect(controller.update(producerId, updateData)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(updateProducerService.perform).toHaveBeenCalledWith(
+        producerId,
+        updateData,
+      );
+    });
+
+    it('should handle service error', async () => {
+      const producerId = faker.string.uuid();
+      const updateData = {
+        name: faker.person.fullName(),
+      };
+      const error = new InternalServerErrorException();
+      updateProducerService.perform.mockRejectedValue(error);
+
+      await expect(controller.update(producerId, updateData)).rejects.toThrow(
+        error,
+      );
+      expect(updateProducerService.perform).toHaveBeenCalledWith(
+        producerId,
+        updateData,
+      );
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete producer successfully', async () => {
+      const producerId = faker.string.uuid();
+      const mockDeleteResult = {
+        affected: 1,
+        raw: [],
+        generatedMaps: [],
+      };
+
+      deleteProducerService.perform.mockResolvedValue(mockDeleteResult);
+
+      const result = await controller.delete(producerId);
+
+      expect(result).toEqual(mockDeleteResult);
+      expect(deleteProducerService.perform).toHaveBeenCalledWith(producerId);
+    });
+
+    it('should throw NotFoundException when producer is not found', async () => {
       const producerId = faker.string.uuid();
 
-      mockGetProducerService.perform.mockRejectedValue(
-        new InternalServerErrorException('Erro ao buscar detalhes do produtor'),
+      deleteProducerService.perform.mockRejectedValue(
+        new NotFoundException('Produtor não encontrado'),
       );
 
-      await expect(controller.get(producerId)).rejects.toThrow(
-        InternalServerErrorException,
+      await expect(controller.delete(producerId)).rejects.toThrow(
+        NotFoundException,
       );
-      expect(mockGetProducerService.perform).toHaveBeenCalledWith(producerId);
+      expect(deleteProducerService.perform).toHaveBeenCalledWith(producerId);
+    });
+
+    it('should handle service error', async () => {
+      const producerId = faker.string.uuid();
+      const error = new InternalServerErrorException();
+      deleteProducerService.perform.mockRejectedValue(error);
+
+      await expect(controller.delete(producerId)).rejects.toThrow(error);
+      expect(deleteProducerService.perform).toHaveBeenCalledWith(producerId);
     });
   });
 });

@@ -13,10 +13,12 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { CpfGuard } from '../../../../common/guards/cpf.guard';
+import { IListTopHarvestService } from '../../services/harvest/list-top-harvest/list-top-harvest.interface';
 
 describe('HarvestController', () => {
   let controller: HarvestController;
   let registerHarvestService: jest.Mocked<IRegisterHarvestService>;
+  let listTopHarvestService: jest.Mocked<IListTopHarvestService>;
 
   const mockRegisterHarvestService = {
     perform: jest.fn(),
@@ -96,6 +98,12 @@ describe('HarvestController', () => {
           provide: 'IRegisterHarvestService',
           useValue: mockRegisterHarvestService,
         },
+        {
+          provide: 'IListTopHarvestService',
+          useValue: {
+            perform: jest.fn(),
+          },
+        },
       ],
     })
       .overrideGuard(CpfGuard)
@@ -104,6 +112,7 @@ describe('HarvestController', () => {
 
     controller = module.get<HarvestController>(HarvestController);
     registerHarvestService = module.get('IRegisterHarvestService');
+    listTopHarvestService = module.get('IListTopHarvestService');
   });
 
   afterEach(() => {
@@ -249,6 +258,84 @@ describe('HarvestController', () => {
       );
 
       expect(registerHarvestService.perform).toHaveBeenCalledWith(harvestData);
+    });
+  });
+
+  describe('listTopHarvests', () => {
+    it('should return top harvests with filters', async () => {
+      const filters = {
+        year: 2024,
+        cultureName: 'Soja',
+        state: 'SP',
+      };
+
+      const mockHarvests = Array(3)
+        .fill(null)
+        .map(() => ({
+          id: faker.string.uuid(),
+          name: faker.commerce.productName(),
+          farmName: faker.company.name(),
+          producerName: faker.person.fullName(),
+          totalProduction: faker.number.float({ min: 100, max: 10000 }),
+          totalArea: faker.number.float({ min: 1, max: 1000 }),
+        }));
+
+      listTopHarvestService.perform.mockResolvedValue(mockHarvests);
+
+      const result = await controller.listTopHarvests(filters);
+
+      expect(result).toEqual(mockHarvests);
+      expect(listTopHarvestService.perform).toHaveBeenCalledWith(filters);
+    });
+
+    it('should return top harvests with only year filter', async () => {
+      const filters = {
+        year: 2024,
+      };
+
+      const mockHarvests = Array(3)
+        .fill(null)
+        .map(() => ({
+          id: faker.string.uuid(),
+          name: faker.commerce.productName(),
+          farmName: faker.company.name(),
+          producerName: faker.person.fullName(),
+          totalProduction: faker.number.float({ min: 100, max: 10000 }),
+          totalArea: faker.number.float({ min: 1, max: 1000 }),
+        }));
+
+      listTopHarvestService.perform.mockResolvedValue(mockHarvests);
+
+      const result = await controller.listTopHarvests(filters);
+
+      expect(result).toEqual(mockHarvests);
+      expect(listTopHarvestService.perform).toHaveBeenCalledWith(filters);
+    });
+
+    it('should handle empty results', async () => {
+      const filters = {
+        year: 2024,
+        cultureName: 'Nonexistent',
+      };
+
+      listTopHarvestService.perform.mockResolvedValue([]);
+
+      const result = await controller.listTopHarvests(filters);
+
+      expect(result).toEqual([]);
+      expect(listTopHarvestService.perform).toHaveBeenCalledWith(filters);
+    });
+
+    it('should handle service error', async () => {
+      const filters = {
+        year: 2024,
+      };
+
+      const error = new InternalServerErrorException();
+      listTopHarvestService.perform.mockRejectedValue(error);
+
+      await expect(controller.listTopHarvests(filters)).rejects.toThrow(error);
+      expect(listTopHarvestService.perform).toHaveBeenCalledWith(filters);
     });
   });
 });
