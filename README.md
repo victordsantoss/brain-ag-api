@@ -179,3 +179,64 @@ erDiagram
 - Tratamento global de erros
 - Códigos de status HTTP apropriados
 - Mensagens de erro detalhadas
+
+## Como Executar o Projeto
+
+### Pré-requisitos
+
+- Node.js (versão 18 ou superior)
+- Docker e Docker Compose
+- PostgreSQL (se não estiver usando Docker)
+
+### Configuração do Ambiente
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/victordsantoss/brain-ag-api
+cd brain-ag-api
+```
+
+2. Instale as dependências:
+
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente:
+
+```bash
+cp .env.example .env
+```
+
+Edite o arquivo `.env` com suas configurações locais.
+
+### Executando com Docker
+
+1. Inicie os containers:
+
+```bash
+docker-compose up
+```
+
+### Executando Testes
+
+Execute testes unitários:
+
+```bash
+npm run test
+```
+
+Visualize a cobertura de testes:
+
+```bash
+npm run test:cov
+```
+
+### Documentação da API
+
+Após iniciar o servidor, a documentação Swagger estará disponível em:
+
+```
+http://localhost:3000/api
+```
