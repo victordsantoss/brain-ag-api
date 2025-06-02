@@ -9,9 +9,10 @@ import { Producer } from '../../../../../database/entities/producer.entity';
 import { IListProducersRequestDto } from '../../../dtos/producer/list.request.dto';
 import { IProducerRepository } from '../../../repositories/producer/producer.interface';
 import { IProducersResponseDto } from '../../../dtos/producer/list.response.dto';
+import { IListProducersService } from './list.interface';
 
 @Injectable()
-export class ListProducersService {
+export class ListProducersService implements IListProducersService {
   private readonly logger = new Logger(ListProducersService.name);
 
   constructor(
@@ -42,7 +43,7 @@ export class ListProducersService {
       });
 
       return {
-        data: producers.map(this.mapToResponse),
+        data: producers.map((producer) => this.mapToResponse(producer)),
         meta: {
           page,
           limit,
