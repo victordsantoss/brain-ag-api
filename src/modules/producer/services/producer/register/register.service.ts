@@ -9,7 +9,7 @@ import { IRegisterProducerService } from './register.interface';
 import { IProducerRepository } from '../../../repositories/producer/producer.interface';
 import { IRegisterProducerRequestDto } from '../../../dtos/producer/register.request.dto';
 import { Producer } from '../../../../../database/entities/producer.entity';
-import { CpfValidator } from 'src/common/utils/validators/cpf.validators';
+import { CpfValidator } from '../../../../../common/utils/validators/cpf.validators';
 
 @Injectable()
 export class RegisterProducerService implements IRegisterProducerService {

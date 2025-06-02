@@ -8,6 +8,7 @@ import { IProducerRepository } from '../../../repositories/producer/producer.int
 import { RegisterProducerService } from './register.service';
 import { faker } from '@faker-js/faker';
 import { BaseEntityStatus } from '../../../../../common/enums/status.enum';
+import { CpfValidator } from '../../../../../common/utils/validators/cpf.validators';
 
 describe('RegisterProducerService', () => {
   let service: RegisterProducerService;
@@ -16,6 +17,11 @@ describe('RegisterProducerService', () => {
   const mockProducerRepository = {
     create: jest.fn(),
     findOneBy: jest.fn(),
+  };
+
+  const mockCpfValidator = {
+    cleanCpf: jest.fn((cpf: string) => cpf.replace(/\D/g, '')),
+    validateCpf: jest.fn(),
   };
 
   const createMockProducer = (): Producer =>
@@ -38,6 +44,10 @@ describe('RegisterProducerService', () => {
         {
           provide: 'IProducerRepository',
           useValue: mockProducerRepository,
+        },
+        {
+          provide: CpfValidator,
+          useValue: mockCpfValidator,
         },
       ],
     }).compile();
@@ -65,6 +75,7 @@ describe('RegisterProducerService', () => {
       // Simulating that no duplicates exist
       producerRepository.findOneBy.mockResolvedValue(null);
       producerRepository.create.mockResolvedValue(mockCreatedProducer);
+      mockCpfValidator.cleanCpf.mockImplementation((cpf) => cpf);
 
       const result = await service.perform(producerData);
 
@@ -83,6 +94,7 @@ describe('RegisterProducerService', () => {
       );
 
       expect(producerRepository.create).toHaveBeenCalledWith(producerData);
+      expect(mockCpfValidator.cleanCpf).toHaveBeenCalledWith(producerData.cpf);
     });
 
     it('should throw BadRequestException when email validation finds duplicate', async () => {
