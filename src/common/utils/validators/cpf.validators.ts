@@ -4,8 +4,13 @@ import { Injectable } from '@nestjs/common';
 export class CpfValidator {
   constructor() {}
 
+  public cleanCpf(cpf: string): string {
+    if (!cpf) return '';
+    return cpf.replace(/\D/g, '');
+  }
+
   public validateCpf(cpf: string): boolean {
-    cpf = cpf.replace(/\D/g, '');
+    cpf = this.cleanCpf(cpf);
     if (cpf.length !== 11) {
       return false;
     }

@@ -15,10 +15,7 @@ export class IBaseProducerRequestDto {
     example: '12345678900',
   })
   @IsString()
-  @Length(11, 11)
-  @Matches(/^\d{11}$/, {
-    message: 'CPF deve conter exatamente 11 dígitos numéricos',
-  })
+  @Length(11, 14)
   cpf: string;
 
   @ApiProperty({
